@@ -1,4 +1,6 @@
-## ipfs
+---
+title: ipfs 
+---
 
 ### ipfs系统相关命令 (主要与ipfs在/root/.ipfs/的配置相关）
 

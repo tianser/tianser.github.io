@@ -79,18 +79,18 @@
 
 
 
-<meta name="description" content="协程协程（Coroutine）本质上是一种用户态线程，不需要操作系统来进行抢占式调度，且在真正的实现中寄存于线程中，因此，系统开销极小，可以有效提高线程的任务并发性，而避免多线程的缺点。使用协程的优点是编程简单，结构清晰；缺点是需要语言的支持，如果不支持，则需要用户在程序中自行实现调度器；目前，原生支持协程的语言还很少； 并发通信 两种最常用的并发通信模式：消息和共享数据1var ch map[s">
+<meta name="description" content="title： golang中使用makefileMakefile必须以tab来进行缩进 12target: prerequisites  recipe  make 变量 VAR := value  //声明变量 123456FILE := abc$(FILE): xyz  echo $(FILE) &amp;gt; &amp;quot;something&amp;quot;xyz:  echo &amp;quot;xyz&amp;">
 <meta name="keywords" content="c&#x2F;c++, golang, ceph, blockchain, 分布式存储, ipfs">
 <meta property="og:type" content="article">
-<meta property="og:title" content="goroutine">
-<meta property="og:url" content="http://yoursite.com/2018/07/04/go_goroutine/index.html">
+<meta property="og:title" content="阳台">
+<meta property="og:url" content="http://yoursite.com/2018/07/17/makefile/index.html">
 <meta property="og:site_name" content="阳台">
-<meta property="og:description" content="协程协程（Coroutine）本质上是一种用户态线程，不需要操作系统来进行抢占式调度，且在真正的实现中寄存于线程中，因此，系统开销极小，可以有效提高线程的任务并发性，而避免多线程的缺点。使用协程的优点是编程简单，结构清晰；缺点是需要语言的支持，如果不支持，则需要用户在程序中自行实现调度器；目前，原生支持协程的语言还很少； 并发通信 两种最常用的并发通信模式：消息和共享数据1var ch map[s">
+<meta property="og:description" content="title： golang中使用makefileMakefile必须以tab来进行缩进 12target: prerequisites  recipe  make 变量 VAR := value  //声明变量 123456FILE := abc$(FILE): xyz  echo $(FILE) &amp;gt; &amp;quot;something&amp;quot;xyz:  echo &amp;quot;xyz&amp;">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-07-04T02:25:49.615Z">
+<meta property="og:updated_time" content="2018-07-06T10:48:40.000Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="goroutine">
-<meta name="twitter:description" content="协程协程（Coroutine）本质上是一种用户态线程，不需要操作系统来进行抢占式调度，且在真正的实现中寄存于线程中，因此，系统开销极小，可以有效提高线程的任务并发性，而避免多线程的缺点。使用协程的优点是编程简单，结构清晰；缺点是需要语言的支持，如果不支持，则需要用户在程序中自行实现调度器；目前，原生支持协程的语言还很少； 并发通信 两种最常用的并发通信模式：消息和共享数据1var ch map[s">
+<meta name="twitter:title" content="阳台">
+<meta name="twitter:description" content="title： golang中使用makefileMakefile必须以tab来进行缩进 12target: prerequisites  recipe  make 变量 VAR := value  //声明变量 123456FILE := abc$(FILE): xyz  echo $(FILE) &amp;gt; &amp;quot;something&amp;quot;xyz:  echo &amp;quot;xyz&amp;">
 
 
 
@@ -120,13 +120,13 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/07/04/go_goroutine/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/07/17/makefile/"/>
 
 
 
 
 
-  <title>goroutine | 阳台</title>
+  <title> | 阳台</title>
   
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/04/go_goroutine/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/07/17/makefile/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -280,7 +280,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">goroutine</h1>
+          <h1 class="post-title" itemprop="name headline"></h1>
         
 
         <div class="post-meta">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-04T10:25:49+08:00">
-                2018-07-04
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-07-17T15:56:54+08:00">
+                2018-07-17
               </time>
             
 
@@ -330,32 +330,29 @@
       
 
       
-        <h3 id="协程"><a href="#协程" class="headerlink" title="协程"></a>协程</h3><p>协程（Coroutine）本质上是一种用户态线程，不需要操作系统来进行抢占式调度，且在真正的实现中寄存于线程中，因此，系统开销极小，可以有效提高线程的任务并发性，而避免多线程的缺点。使用协程的优点是编程简单，结构清晰；缺点是需要语言的支持，如果不支持，则需要用户在程序中自行实现调度器；目前，原生支持协程的语言还很少；</p>
-<h3 id="并发通信"><a href="#并发通信" class="headerlink" title="并发通信"></a>并发通信</h3><ul>
-<li>两种最常用的并发通信模式：消息和共享数据<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> ch <span class="keyword">map</span>[<span class="keyword">string</span>] <span class="keyword">chan</span> <span class="keyword">bool</span></span><br></pre></td></tr></table></figure>
-</li>
-</ul>
-<h3 id="单向channel"><a href="#单向channel" class="headerlink" title="单向channel"></a>单向channel</h3><p>对channel的限制使用：<br><br>一个channel变量传递到一个函数时，可以通过将其指定为单向channel变量，从而限制该函数中可以对此channel的操作，比如只能往这个channel写，或者只能从这个channel读。</p>
+        <hr>
+<h2 id="title：-golang中使用makefile"><a href="#title：-golang中使用makefile" class="headerlink" title="  title： golang中使用makefile"></a>  title： golang中使用makefile</h2><p>Makefile必须以tab来进行缩进</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">target: prerequisites</span><br><span class="line">  recipe</span><br></pre></td></tr></table></figure>
 <ul>
-<li><p>使用多核心CPU:</p>
-<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line">runtime.GOMAXPROCS(<span class="number">16</span>)</span><br></pre></td></tr></table></figure>
-</li>
-<li><p>出让时间片<br>使用runtime包中的Gosched()函数实现<br>实际上，需要精细地控制goroutine的行为，就必须深入地了解GO语言开发包中的runtime包所提供的具体功能；</p>
-</li>
-</ul>
-<h3 id="go-网络编程"><a href="#go-网络编程" class="headerlink" title="go 网络编程"></a>go 网络编程</h3><ul>
-<li>标准库中的net包</li>
-<li>使用net.Dial()封装了socket(), bind(), listen(), connect(),accept(), receive(), send()函数；<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">handleMsg</span><span class="params">(conn net.Conn)</span> <span class="params">([]<span class="keyword">byte</span>, error)</span></span> &#123;</span><br><span class="line">    <span class="keyword">defer</span> conn.Close()</span><br><span class="line"></span><br><span class="line">    result := bytes.NewBuffer(<span class="literal">nil</span>)  <span class="comment">//这里需要用循环buf来提高效率</span></span><br><span class="line">    <span class="keyword">var</span> buf [<span class="number">512</span>]<span class="keyword">byte</span></span><br><span class="line">    <span class="keyword">for</span> &#123;</span><br><span class="line">        size, err := conn.Read(buf[<span class="number">0</span>:])</span><br><span class="line">        result.Write(buf[<span class="number">0</span>:size])</span><br><span class="line">        <span class="keyword">if</span> err != <span class="literal">nil</span> &#123;</span><br><span class="line">            <span class="keyword">if</span> err == io.EOF &#123;</span><br><span class="line">                <span class="keyword">break</span></span><br><span class="line">            &#125;</span><br><span class="line">            <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">    <span class="keyword">return</span> result.Bytes(), <span class="literal">nil</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<li><p>make 变量</p>
+<p>VAR := value  //声明变量</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line">FILE := abc</span><br><span class="line">$(FILE): xyz</span><br><span class="line">  echo $(FILE) &gt; &quot;something&quot;</span><br><span class="line"></span><br><span class="line">xyz:</span><br><span class="line">  echo &quot;xyz&quot; &gt; xyz</span><br></pre></td></tr></table></figure>
 </li>
 </ul>
-<h3 id="http"><a href="#http" class="headerlink" title="http"></a>http</h3><ul>
-<li>net/http包</li>
-</ul>
-<h3 id="工程管理"><a href="#工程管理" class="headerlink" title="工程管理"></a>工程管理</h3><ul>
-<li>命名<br><br>驼峰命名命名法doSometing<br><br>c/c++则是下划线命名法</li>
-<li>目录结构<figure class="highlight sh"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br></pre></td><td class="code"><pre><span class="line">&lt;calcproj&gt;</span><br><span class="line">  ├─README</span><br><span class="line">  ├─AUTHORS</span><br><span class="line">  |─LICENSE</span><br><span class="line">  ├─&lt;bin&gt;</span><br><span class="line">    ├─calc</span><br><span class="line">  ├─&lt;pkg&gt;</span><br><span class="line">    └─&lt;linux_amd64&gt;</span><br><span class="line">      └─simplemath.a</span><br><span class="line">  ├─&lt;src&gt;</span><br><span class="line">    ├─&lt;calc&gt;</span><br><span class="line">      └─calc.go</span><br><span class="line">    ├─&lt;simplemath&gt;</span><br><span class="line">      ├─add.go</span><br><span class="line">      ├─add_test.go</span><br><span class="line">      ├─sqrt.go</span><br><span class="line">      ├─sqrt_test.go</span><br></pre></td></tr></table></figure>
+<p><a href="https://sahilm.com/makefiles-for-golang/" target="_blank" rel="noopener">https://sahilm.com/makefiles-for-golang/</a></p>
+<p>make描述了如何构建我们的项目，那些可运行的测试以及项目中依赖的额外的工具；<br>PHONY 目标并非实际的文件名： 只是显示请求时执行命令的名字；优势有以下两点：</p>
+<ul>
+<li><p>避免和同名文件冲突<br>如果编写一个规则，并不产生目标文件，则其命令在每次make该目标时都执行：</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">clean:</span><br><span class="line">  rm *.o temp</span><br></pre></td></tr></table></figure>
+<p> 因为” rm “  并不生成” clean “文件，则每次执行” make clean “ 的时候，该命令都会执行；<br> 如果目录中出现了 “ clean “文件，则规则失效了：没有依赖文件，文件”clean”始终是最新的， 命令永远不会执行； 为了避免这个问题，可使用” .PHONY “指明该目标。</p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br></pre></td><td class="code"><pre><span class="line">.PHONY: clean</span><br><span class="line">clean:</span><br><span class="line">  rm *.0 temp</span><br></pre></td></tr></table></figure>
+<p>这样执行” make clean “会无视” clean “文件存在与否；<br>已知phony 目标并非是由其它文件生成的实际文件，make 会跳过隐含规则搜索。这就是声明phony 目标会改善性能的原因，即使你并不担心实际文件存在与否。</p>
+</li>
+<li><p>改善性能<br>phony 目标可以有依赖关系。当一个目录中有多个程序，将其放在一个makefile 中会更方便。因为缺省目标是makefile 中的第一个目标，通常将这个phony 目标叫做”all”，其依赖文件为各个程序：</p>
 </li>
 </ul>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">all : prog1 prog2 prog3</span><br><span class="line">.PHONY : all</span><br><span class="line">prog1 : prog1.o utils.o</span><br><span class="line">  cc -o prog1 prog1.o utils.o</span><br><span class="line">prog2 : prog2.o</span><br><span class="line">  cc -o prog2 prog2.o</span><br><span class="line">prog3 : prog3.o sort.o utils.o</span><br><span class="line">  cc -o prog3 prog3.o sort.o utils.o</span><br></pre></td></tr></table></figure>
+<p>一个项目最后需要产生两个可执行文件。主要目标是产生两个可执行文件，但这两个文件是相互独立的——如果一个文件需要重建，并不影响另一个。使用“假象目的”来 达到这种效果。一个假象目的跟一个正常的目的几乎是一样的， 只是这个目的文件是不存在的。因此， make 总是会假设它需要 被生成，当把它的依赖文件更新后，就会执行它的规则里的命令行。</p>
 
       
     </div>
@@ -380,8 +377,8 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/07/04/eth/" rel="next" title="部署以太坊私链：">
-                <i class="fa fa-chevron-left"></i> 部署以太坊私链：
+              <a href="/2018/07/04/solidity_01/" rel="next" title="solidity入门之一">
+                <i class="fa fa-chevron-left"></i> solidity入门之一
               </a>
             
           </div>
@@ -390,8 +387,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/07/04/solidity_01/" rel="prev" title="solidity入门之一">
-                solidity入门之一 <i class="fa fa-chevron-right"></i>
+              <a href="/2018/07/17/sodility_optimal/" rel="prev" title="solidity代码优化">
+                solidity代码优化 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -506,7 +503,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#协程"><span class="nav-number">1.</span> <span class="nav-text">协程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#并发通信"><span class="nav-number">2.</span> <span class="nav-text">并发通信</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#单向channel"><span class="nav-number">3.</span> <span class="nav-text">单向channel</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#go-网络编程"><span class="nav-number">4.</span> <span class="nav-text">go 网络编程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#http"><span class="nav-number">5.</span> <span class="nav-text">http</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#工程管理"><span class="nav-number">6.</span> <span class="nav-text">工程管理</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-2"><a class="nav-link" href="#title：-golang中使用makefile"><span class="nav-number">1.</span> <span class="nav-text">  title： golang中使用makefile</span></a></li></ol></div>
             
 
           </div>

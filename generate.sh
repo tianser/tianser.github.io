@@ -1,5 +1,7 @@
 git checkout dev -- public
-mv -T public/* ./ -bf  
-git add --all .
-git commit -s -m "add post"
-git push
+ls public/ |xargs -n 1 -i cp public/{} ./ -rf
+rm public -rf
+
+#git add --all .
+#git commit -s -m "add post"
+#git push

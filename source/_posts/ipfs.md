@@ -1,5 +1,5 @@
 ---
-title: ipfs 
+title: ipfs
 ---
 
 ### ipfs系统相关命令 (主要与ipfs在/root/.ipfs/的配置相关）
@@ -144,15 +144,3 @@ IPLD（ InterPlanetary Linked Data） 主要用来定义数据， 给数据建�
 
     "API": "/ip4/0.0.0.0/tcp/5001",
     "Gateway": "/ip4/0.0.0.0/tcp/8080"
-
-
-
-db 删除到某个单词的开始位置
-
-dw 删除到某个单词的结尾位置
-
-D 删除到某一行的结尾
-
-d0 删至行首。
-
-d$ 删至行尾。

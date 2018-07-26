@@ -5,3 +5,5 @@ rm public -rf
 git add --all .
 git commit -s -m "add post"
 git push
+
+git checkout dev

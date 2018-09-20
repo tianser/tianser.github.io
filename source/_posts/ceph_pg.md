@@ -140,9 +140,7 @@ void handle_event(const boost::statechart::event_base &evt, RecoveryCtx *rctx)
 
 void PG::RecoveryState::start_handle(RecoveryCtx *new_ctx){
   ...
-
 }
-
 
 class RecoveryState{
   void start_handle(RecoveryCtx *new_ctx);
@@ -154,12 +152,7 @@ private:
     ...
   }
 }
-
-
 ```
-
-
-
 
 
 ```c++

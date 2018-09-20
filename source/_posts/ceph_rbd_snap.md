@@ -188,17 +188,3 @@ ctx->snapc.snaps = m->get_snaps();
 
 - clinet(librbd)对象快照oid.snap > osd 端快照序号 ssc->snapset.seq, 获取head对象就是该快照对应的时间数据对象。
 - 计算oid.snap首次大于ssc->snapset。clones列表中的克隆对象，就是oid对应的克隆对象；
-
-
-
-
-
-
-
-
-
-
-
-
-
-//

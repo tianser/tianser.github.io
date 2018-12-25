@@ -1,5 +1,10 @@
 ---
- title: ceph rados对象属性研究
+title: ceph rados对象属性研究
+date: 2018-12-10
+categories:
+  - ceph
+tags:
+  - ceph 
 ---
 
 ### rados
@@ -19,7 +24,7 @@ rados组织形式：
 3、对象的额外属性可以有两个存储的部分：一个是ext4文件的属性部分，这部分往往受底层文件系统的约束，比如ext4文件系统要求其最大不超过4KB；另一个是rados实现的omap，rados使用一种机制，可以为每一个object关联一个omap
 4、omap是一个key-value存储系统，最早是leveldb，当然也有其他选择，比如rocksdb。
 5、FileStore的omap中存放的对视对象的属性信息，以key-value的形式存在，那么对于不同的属性，如何定义对象的键值key呢；
-
+<!-- more -->
 ### 
 
 ```c++

@@ -1,5 +1,11 @@
 ---
   title:golang中使用makefile
+  date: 2018-04-15
+  categories:
+    - golang
+  tags:
+    - golang
+    - makefile
 ---
 
 Makefile必须以tab来进行缩进

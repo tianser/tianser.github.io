@@ -1,5 +1,10 @@
 ---
 title: ipfs
+date: 2018-04-15
+categories:
+  - ipfs
+tags:
+    - ipfs
 ---
 
 ### ipfs系统相关命令 (主要与ipfs在/root/.ipfs/的配置相关）

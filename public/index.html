@@ -260,7 +260,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/14/ceph_mon/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/ceph_pg/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -279,7 +279,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/12/14/ceph_mon/" itemprop="url">ceph-mon</a></h1>
+                <a class="post-title-link" href="/2018/12/10/ceph_pg/" itemprop="url">pg</a></h1>
         
 
         <div class="post-meta">
@@ -291,8 +291,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-14T17:35:12+08:00">
-                2018-12-14
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T00:00:00+08:00">
+                2018-12-10
               </time>
             
 
@@ -301,6 +301,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -331,12 +353,13 @@
       
         
           
-          mon-&gt;preinit()messenger-&gt;start()mon-&gt;init()
-1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253
+          pg概述
+ReplicatedPG::do_request|- ReplicatedPG::do_op  //仅仅分析请求类型为”CEPH_MSG_OSD_OP”|- ReplicatedPG::find_object_context
+      |-ReplicatedPG::execute_ct
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/12/14/ceph_mon/#more" rel="contents">
+            <a class="btn" href="/2018/12/10/ceph_pg/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -387,7 +410,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/30/rgw_put_object/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/ceph_mon/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -406,7 +429,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/30/rgw_put_object/" itemprop="url">rgw put object流程</a></h1>
+                <a class="post-title-link" href="/2018/12/10/ceph_mon/" itemprop="url">ceph-mon</a></h1>
         
 
         <div class="post-meta">
@@ -418,8 +441,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-30T11:00:01+08:00">
-                2018-11-30
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T00:00:00+08:00">
+                2018-12-10
               </time>
             
 
@@ -428,6 +451,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -457,13 +502,10 @@
 
       
         
-          
-          op处理/// rgw/rgw_op.cc123void RGWPutObj::execute()&#123;    &#125;
-
-          
+          <p>mon-&gt;preinit()<br>messenger-&gt;start()<br>mon-&gt;init()<br>
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/30/rgw_put_object/#more" rel="contents">
+            <a class="btn" href="/2018/12/10/ceph_mon/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -514,7 +556,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/28/ceph_object_attr/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/12/10/ceph_object_attr/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -533,7 +575,7 @@
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/28/ceph_object_attr/" itemprop="url">ceph rados对象属性研究</a></h1>
+                <a class="post-title-link" href="/2018/12/10/ceph_object_attr/" itemprop="url">ceph rados对象属性研究</a></h1>
         
 
         <div class="post-meta">
@@ -545,8 +587,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-28T16:08:16+08:00">
-                2018-11-28
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-12-10T00:00:00+08:00">
+                2018-12-10
               </time>
             
 
@@ -555,6 +597,28 @@
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -584,30 +648,28 @@
 
       
         
-          
-          radosrados组织形式：
-
-pool
-object
-xattr
-xfs文件属性
-omap
-
-
-data
-xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、一个object包含两部分：
-
-
-
-
-
-
-存储对象的数据
-该对象的额外属性xattr3、对象的额外属性可以
-          ...
+          <h3 id="rados"><a href="#rados" class="headerlink" title="rados"></a>rados</h3><p>rados组织形式：</p>
+<ul>
+<li>pool<ul>
+<li>object<ul>
+<li>xattr<ul>
+<li>xfs文件属性</li>
+<li>omap</li>
+</ul>
+</li>
+<li>data<ul>
+<li>xfs文件内容<br>1、rados以pool来组织数据，pool中包含许多object<br>2、一个object包含两部分：</li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+</li>
+<li>存储对象的数据</li>
+<li>该对象的额外属性xattr<br>3、对象的额外属性可以有两个存储的部分：一个是ext4文件的属性部分，这部分往往受底层文件系统的约束，比如ext4文件系统要求其最大不超过4KB；另一个是rados实现的omap，rados使用一种机制，可以为每一个object关联一个omap<br>4、omap是一个key-value存储系统，最早是leveldb，当然也有其他选择，比如rocksdb。<br>5、FileStore的omap中存放的对视对象的属性信息，以key-value的形式存在，那么对于不同的属性，如何定义对象的键值key呢；
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/28/ceph_object_attr/#more" rel="contents">
+            <a class="btn" href="/2018/12/10/ceph_object_attr/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -658,7 +720,7 @@ xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、�
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/09/design/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/11/10/ceph_rbd_snap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -677,7 +739,7 @@ xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、�
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/11/09/design/" itemprop="url">design model 之 subcribe/publish</a></h1>
+                <a class="post-title-link" href="/2018/11/10/ceph_rbd_snap/" itemprop="url">ceph_rbd_snap</a></h1>
         
 
         <div class="post-meta">
@@ -689,8 +751,8 @@ xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、�
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-09T17:51:31+08:00">
-                2018-11-09
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-11-10T00:00:00+08:00">
+                2018-11-10
               </time>
             
 
@@ -699,6 +761,28 @@ xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、�
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -729,274 +813,16 @@ xfs文件内容1、rados以pool来组织数据，pool中包含许多object2、�
       
         
           
-          简单工厂模式1234567891011121314151617181920212223242526272829303132type sayer interface &#123;    say()&#125;type man struct&#123;&#125;func (m *man)say()&#
+          对克隆块的写操作流程：//从这里明白多重克隆降低性能
+
+客户端（librbd）向对应的OSD发送正常的写请求；
+OSD返回客户端(librbd)应答，表明该OSD上对应的对象不存在；
+客户端(librbd)发送读请求给克隆块的父块，读取对应snap1上的数据返回给客户端；
+客户端(librbd)把该
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/11/09/design/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/10/08/c++11_base/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="天色渐晚">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="阳台">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/10/08/c++11_base/" itemprop="url">c++11基础整理</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-10-08T16:05:06+08:00">
-                2018-10-08
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          关键字：
-override： 确保成员函数为虚并覆盖基类的虚函数
-
-用于标注在派生类函数中
-该函数必须和基类的函数有相同的签名(即参数，返回值，const等一致)
-在基类中，该函数必须声明为virtual
-
-
-final: 一旦成员虚函数被声明为final，派生类不能再覆盖它
-
-表面它的派生类不能再
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/10/08/c++11_base/#more" rel="contents">
-              阅读全文 &raquo;
-            </a>
-          </div>
-          <!--/noindex-->
-        
-      
-    </div>
-    
-    
-    
-
-    
-
-    
-
-    
-
-    <footer class="post-footer">
-      
-
-      
-
-      
-
-      
-      
-        <div class="post-eof"></div>
-      
-    </footer>
-  </div>
-  
-  
-  
-  </article>
-
-
-    
-      
-
-  
-
-  
-  
-  
-
-  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
-  
-  
-  
-  <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/ssd_write_amplification/">
-
-    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
-      <meta itemprop="name" content="天色渐晚">
-      <meta itemprop="description" content="">
-      <meta itemprop="image" content="/images/avatar.gif">
-    </span>
-
-    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
-      <meta itemprop="name" content="阳台">
-    </span>
-
-    
-      <header class="post-header">
-
-        
-        
-          <h1 class="post-title" itemprop="name headline">
-                
-                <a class="post-title-link" href="/2018/09/21/ssd_write_amplification/" itemprop="url">ssd write amplification</a></h1>
-        
-
-        <div class="post-meta">
-          <span class="post-time">
-            
-              <span class="post-meta-item-icon">
-                <i class="fa fa-calendar-o"></i>
-              </span>
-              
-                <span class="post-meta-item-text">发表于</span>
-              
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T15:16:42+08:00">
-                2018-09-21
-              </time>
-            
-
-            
-
-            
-          </span>
-
-          
-
-          
-            
-          
-
-          
-          
-
-          
-
-          
-
-          
-
-        </div>
-      </header>
-    
-
-    
-    
-    
-    <div class="post-body" itemprop="articleBody">
-
-      
-      
-
-      
-        
-          
-          Page 和 Blockssd中有page和block的概念，page的大小为 4k，而block的大小为512k（128个page）
-write amplification从前一直认为SSD的写放大（Write amplification）是指SSD一次写必须写一个Block，其实不是这样的。SS
-          ...
-          <!--noindex-->
-          <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/ssd_write_amplification/#more" rel="contents">
+            <a class="btn" href="/2018/11/10/ceph_rbd_snap/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1179,7 +1005,7 @@ VAR := value  //声明变量
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/librbd/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/10/design/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -1198,7 +1024,7 @@ VAR := value  //声明变量
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/21/librbd/" itemprop="url">librbd分析</a></h1>
+                <a class="post-title-link" href="/2018/08/10/design/" itemprop="url">design model 之 subcribe/publish</a></h1>
         
 
         <div class="post-meta">
@@ -1210,8 +1036,8 @@ VAR := value  //声明变量
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T15:16:42+08:00">
-                2018-09-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-10T00:00:00+08:00">
+                2018-08-10
               </time>
             
 
@@ -1220,6 +1046,28 @@ VAR := value  //声明变量
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/设计模式/" itemprop="url" rel="index">
+                    <span itemprop="name">设计模式</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1250,11 +1098,11 @@ VAR := value  //声明变量
       
         
           
-          //通过lib形式调用，所以不走main函数12345678910111213141516171819202122232425262728293031323334353637383940414243444546474849505152535455565758596061626364656667686
+          简单工厂模式1234567891011121314151617181920212223242526272829303132type sayer interface &#123;    say()&#125;type man struct&#123;&#125;func (m *man)say()&#
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/librbd/#more" rel="contents">
+            <a class="btn" href="/2018/08/10/design/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1305,7 +1153,7 @@ VAR := value  //声明变量
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/go_reflect(反射机制)/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/go_paxos/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -1324,7 +1172,7 @@ VAR := value  //声明变量
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/21/go_reflect(反射机制)/" itemprop="url">Golang反射包的实现原理（The Laws of Reflection)</a></h1>
+                <a class="post-title-link" href="/2018/04/15/go_paxos/" itemprop="url">paxos</a></h1>
         
 
         <div class="post-meta">
@@ -1336,8 +1184,8 @@ VAR := value  //声明变量
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T15:16:42+08:00">
-                2018-09-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
               </time>
             
 
@@ -1346,6 +1194,28 @@ VAR := value  //声明变量
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1376,16 +1246,11 @@ VAR := value  //声明变量
       
         
           
-          类型和接口(Types and interfaces)因为反射是建立在类型系统(type system)上的。所以我们从Go的类型入手
-
-Go是静态类型化的。每个变量都有一个静态类型1234type MyInt intvar i intvar j MyInt
-
-
-i的类型就是int，而j的类型就是M
+          这个leader节点是怎么确定的？答案：zookeeper系统自己选举出来的，所有server节点（observer除外），都参与这个选举。这样做的好处是：当现在leader挂掉了之后，系统可以重新选举一个节点做leader。Zookeeper的选举算法能保证：只要超过半数节点还活着，就一定能选举出
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/go_reflect(反射机制)/#more" rel="contents">
+            <a class="btn" href="/2018/04/15/go_paxos/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1436,7 +1301,7 @@ i的类型就是int，而j的类型就是M
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/go_cache_lru/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/solidity_library/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -1455,7 +1320,7 @@ i的类型就是int，而j的类型就是M
         
           <h1 class="post-title" itemprop="name headline">
                 
-                <a class="post-title-link" href="/2018/09/21/go_cache_lru/" itemprop="url">cache lru</a></h1>
+                <a class="post-title-link" href="/2018/04/15/solidity_library/" itemprop="url">solidity Library</a></h1>
         
 
         <div class="post-meta">
@@ -1467,8 +1332,8 @@ i的类型就是int，而j的类型就是M
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T15:16:42+08:00">
-                2018-09-21
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
               </time>
             
 
@@ -1477,6 +1342,28 @@ i的类型就是int，而j的类型就是M
             
           </span>
 
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blockchain/" itemprop="url" rel="index">
+                    <span itemprop="name">blockchain</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
           
 
           
@@ -1507,11 +1394,308 @@ i的类型就是int，而j的类型就是M
       
         
           
-          lru123456789101112131415161718192021222324252627282930313233343536373839404142434445464748495051525354555657585960616263646566676869707172737475767778
+          在Solidity中，与合约有些不同，Library不能处理ether。你可以把它当作一个EVM中的单例，又或者是一个部署一次后不再部署，然后能被做任意其它合约调用的公共代码。
+这带来的一个显然好处是节省大量的gas（当然也可以减少重复代码对区块链带来的污染），因为代码不用一而再，再而三的部署，不同
           ...
           <!--noindex-->
           <div class="post-button text-center">
-            <a class="btn" href="/2018/09/21/go_cache_lru/#more" rel="contents">
+            <a class="btn" href="/2018/04/15/solidity_library/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/solidity_inter_call/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/15/solidity_inter_call/" itemprop="url">solidity合约之间的调用</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/blockchain/" itemprop="url" rel="index">
+                    <span itemprop="name">blockchain</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          solidity合约相互调用1234567891011121314151617181920212223242526272829303132333435363738394041424344454647484950515253545556575859606162636465666768697071727
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/15/solidity_inter_call/#more" rel="contents">
+              阅读全文 &raquo;
+            </a>
+          </div>
+          <!--/noindex-->
+        
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+
+      
+
+      
+
+      
+      
+        <div class="post-eof"></div>
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+    
+      
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/go_goroutine/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+                
+                <a class="post-title-link" href="/2018/04/15/go_goroutine/" itemprop="url">goroutine</a></h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang/" itemprop="url" rel="index">
+                    <span itemprop="name">golang</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        
+          
+          协程协程（Coroutine）本质上是一种用户态线程，不需要操作系统来进行抢占式调度，且在真正的实现中寄存于线程中，因此，系统开销极小，可以有效提高线程的任务并发性，而避免多线程的缺点。使用协程的优点是编程简单，结构清晰；缺点是需要语言的支持，如果不支持，则需要用户在程序中自行实现调度器；目前，原生
+          ...
+          <!--noindex-->
+          <div class="post-button text-center">
+            <a class="btn" href="/2018/04/15/go_goroutine/#more" rel="contents">
               阅读全文 &raquo;
             </a>
           </div>
@@ -1599,14 +1783,32 @@ i的类型就是int，而j的类型就是M
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">29</span>
+                  <span class="site-state-item-count">28</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
             
 
             
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
 
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">14</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
             
 
           </nav>

@@ -1,5 +1,10 @@
 ---
     title: goroutine
+    date: 2018-04-15
+    categories:
+      - golang
+    tags:
+      - goroutine
 ---
 
 ### 协程

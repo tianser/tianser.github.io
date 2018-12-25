@@ -1,5 +1,10 @@
 ---
   title: Golang反射包的实现原理（The Laws of Reflection)
+  date: 2018-04-15
+  categories:
+  - golang
+  tags:
+    - golang
 ---
 
 ### 类型和接口(Types and interfaces)

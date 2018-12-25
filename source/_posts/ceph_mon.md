@@ -1,11 +1,16 @@
 ---
-  title: ceph-mon
+title: ceph-mon
+date: 2018-12-10
+categories:
+    - ceph
+tags:
+    - ceph
 ---
 
 mon->preinit()
 messenger->start()
 mon->init()
-
+<!-- more -->
 ```c++
 // mon/Monitor.cc
 int Monitor::preinit()

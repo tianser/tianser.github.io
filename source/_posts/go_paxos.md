@@ -1,5 +1,10 @@
 ---
   title: paxos
+  date: 2018-04-15
+  categories:
+    - ceph
+  tags:
+    - paxos 
 ---
 
 ### 这个leader节点是怎么确定的？

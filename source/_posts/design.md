@@ -1,5 +1,10 @@
 ---
   title: design model 之 subcribe/publish 
+  date: 2018-08-10
+  categories:
+    - 设计模式
+  tags:
+    - golang
 ---
 ### 简单工厂模式
 ```go

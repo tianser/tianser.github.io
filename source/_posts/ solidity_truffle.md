@@ -1,5 +1,11 @@
 ---
   title: solidity truffle
+  date: 2018-04-08
+  categories:
+    - blockchain
+  tags:
+    - eth
+    - solidity
 ---
 
 ### solidity语法：

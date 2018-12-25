@@ -1,5 +1,10 @@
 ---
-  title: ceph messager 分析
+title: ceph messager 分析
+date: 2018-04-10
+categories:
+  - ceph
+tags:
+  - ceph
 ---
 
 ### Messenger

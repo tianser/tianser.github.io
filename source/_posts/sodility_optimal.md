@@ -1,6 +1,13 @@
 ---
-  title: solidity代码优化
+title: solidity代码优化
+date: 2018-04-15
+categories:
+  - blockchain
+tags:
+  - solidity 
+  - eth
 ---
+
 ```javascript
 contract BadFailEarly {
   uint constant DEFAULT_SALARY = 50000;

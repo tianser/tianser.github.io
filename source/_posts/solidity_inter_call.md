@@ -1,5 +1,8 @@
 ---
   title: solidity合约之间的调用
+  date: 2018-04-15
+  categories:
+  - blockchain
 ---
 
 ### solidity合约相互调用

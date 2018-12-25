@@ -1,5 +1,11 @@
 ---
   title: librbd分析
+  date: 2018-04-15
+  categories:
+  - ceph
+  tags:
+    - librbd
+    - ceph
 ---
 
 //通过lib形式调用，所以不走main函数

@@ -1,5 +1,11 @@
 ---
-  title: solidity入门之一
+title: solidity入门之一
+date: 2018-04-15
+categories:
+    - blockchain
+tags:
+    - eth 
+    - solidity
 ---
 
 ### 概述

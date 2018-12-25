@@ -1,5 +1,10 @@
 ---
   title: ERC20标准说明
+  date: 2018-04-15
+  categories:
+    - blockchain
+  tags:
+    - eth
 ---
 ### 概述
 原文说明：https://github.com/ethereum/EIPs/blob/master/EIPS/eip-20.md

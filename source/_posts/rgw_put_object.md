@@ -1,5 +1,12 @@
 ---
- title: rgw put object流程
+title: rgw put object流程
+date: 2018-04-15
+categories:
+    - ceph
+tags:
+    - s3
+    - rgw
+    - ceph
 ---
 
 ### op处理

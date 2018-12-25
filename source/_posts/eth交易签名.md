@@ -1,5 +1,10 @@
 ---
   title: 以太坊交易签名
+  date: 2018-04-15
+  categories:
+    - blockchain
+  tags:
+    - eth
 ---
 ### 以太坊的Transaction结构
 ```go

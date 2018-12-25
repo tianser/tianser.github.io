@@ -1,5 +1,10 @@
 ---
   title: snapshot
+  date: 2018-04-15
+  categories:
+    - other
+  tags:
+    - snapshot
 ---
 ### snapshot
 

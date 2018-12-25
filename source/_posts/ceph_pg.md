@@ -1,5 +1,10 @@
 ---
   title: pg
+  date: 2018-12-10
+  categories:
+    - ceph
+  tags:
+    - ceph
 ---
 
 ### pg概述

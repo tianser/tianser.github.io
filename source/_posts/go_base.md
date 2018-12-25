@@ -1,5 +1,10 @@
 ---
 title: go之基础重温
+date: 2018-04-15
+categories:
+  - golang
+tags:
+  - golang
 ---
 - 值语义
      -  大多数类型基于值语义，包括基本类型：byte, int, bool, float32, float64 和string

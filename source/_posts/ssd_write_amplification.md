@@ -1,5 +1,10 @@
 ---
-  title: ssd write amplification
+title: ssd write amplification
+date: 2018-04-15
+categories:
+    - other
+tags:
+    - ssd 
 ---
 
 ### Page 和 Block
@@ -15,8 +20,8 @@ ssd中有page和block的概念，page的大小为 4k，而block的大小为512k�
 - 整个block erase掉
 - 将整个block数据写入
 
-### 解决版本Trim
-TRIM是现在公认的解决写放大的比较好的方案。
+### 解决版本trim
+trim是现在公认的解决写放大的比较好的方案。
 TRIM位于操作系统层。操作系统使用TRIM命令来通知SSD某个page的数据不需要了，可以回收了。
 支持TRIM的操作系统和以往的主要区别是删除一个Page的操作不同。在磁盘时期，删除一个page，之后在文件系统的记录信息里将该page的标志位设置为可用，但是并没有将数据删除。
 使用SSD且支持TRIM的操作系统，在删除一个page时，会同时通知SSD这个page的数据不需要了，SSD内部有一个空闲时刻的垃圾收集进程，在空闲时刻SSD会将一些空闲的数据集中到一起，

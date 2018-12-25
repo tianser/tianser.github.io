@@ -1,5 +1,11 @@
 ---
   title: ceph_rbd_snap
+  date: 2018-11-10
+  categories:
+    - ceph
+  tags:
+    - ceph 
+    - snapshot
 ---
 
 对克隆块的写操作流程：//从这里明白多重克隆降低性能

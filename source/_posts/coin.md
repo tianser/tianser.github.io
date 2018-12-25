@@ -1,5 +1,11 @@
 ---
  title: 基于ERC20发币合约
+ date: 2018-04-11
+ categories:
+    - blockchain
+ tags:
+    - eth
+    - solidity
 ---
 
 ```solidity

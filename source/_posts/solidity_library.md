@@ -1,5 +1,11 @@
 ---
-  title: solidity Library
+title: solidity Library
+date: 2018-04-15
+categories:
+  - blockchain
+tags:
+  - solidity
+  - eth
 ---
 
 在Solidity中，与合约有些不同，Library不能处理ether。你可以把它当作一个EVM中的单例，又或者是一个部署一次后不再部署，然后能被做任意其它合约调用的公共代码。

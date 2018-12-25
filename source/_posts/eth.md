@@ -1,5 +1,10 @@
 ---
  title: 部署以太坊私链：
+ date: 2018-04-15
+ categories:
+  - blockchain
+tags:
+    - eth
 ---
 帐号准备：
 ​ 部署合约需要外部帐户，进入交互界面；

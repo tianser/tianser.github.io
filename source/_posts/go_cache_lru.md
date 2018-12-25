@@ -1,5 +1,10 @@
 ---
     title: cache lru
+    date: 2018-04-15
+    categories:
+    - golang
+    tags:
+      - cache
 ---
 
 ### lru

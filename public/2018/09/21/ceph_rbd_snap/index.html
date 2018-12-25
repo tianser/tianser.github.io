@@ -83,11 +83,11 @@
 <meta name="keywords" content="c&#x2F;c++, golang, ceph, blockchain, 分布式存储, ipfs">
 <meta property="og:type" content="article">
 <meta property="og:title" content="ceph_rbd_snap">
-<meta property="og:url" content="http://yoursite.com/2018/08/20/ceph_rbd_snap/index.html">
+<meta property="og:url" content="http://yoursite.com/2018/09/21/ceph_rbd_snap/index.html">
 <meta property="og:site_name" content="阳台">
 <meta property="og:description" content="对克隆块的写操作流程：//从这里明白多重克隆降低性能  客户端（librbd）向对应的OSD发送正常的写请求； OSD返回客户端(librbd)应答，表明该OSD上对应的对象不存在； 客户端(librbd)发送读请求给克隆块的父块，读取对应snap1上的数据返回给客户端； 客户端(librbd)把该快照数据写入克隆image中； 客户端(librbd)把克隆image发送写操作，写入实际数据；">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-08-28T08:38:51.342Z">
+<meta property="og:updated_time" content="2018-09-21T07:16:42.237Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph_rbd_snap">
 <meta name="twitter:description" content="对克隆块的写操作流程：//从这里明白多重克隆降低性能  客户端（librbd）向对应的OSD发送正常的写请求； OSD返回客户端(librbd)应答，表明该OSD上对应的对象不存在； 客户端(librbd)发送读请求给克隆块的父块，读取对应snap1上的数据返回给客户端； 客户端(librbd)把该快照数据写入克隆image中； 客户端(librbd)把克隆image发送写操作，写入实际数据；">
@@ -120,7 +120,7 @@
 
 
 
-  <link rel="canonical" href="http://yoursite.com/2018/08/20/ceph_rbd_snap/"/>
+  <link rel="canonical" href="http://yoursite.com/2018/09/21/ceph_rbd_snap/"/>
 
 
 
@@ -263,7 +263,7 @@
   
   
   <div class="post-block">
-    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/08/20/ceph_rbd_snap/">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/09/21/ceph_rbd_snap/">
 
     <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
       <meta itemprop="name" content="天色渐晚">
@@ -292,8 +292,8 @@
               
                 <span class="post-meta-item-text">发表于</span>
               
-              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-08-20T11:02:14+08:00">
-                2018-08-20
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-09-21T15:16:42+08:00">
+                2018-09-21
               </time>
             
 
@@ -386,7 +386,6 @@
 <li>clinet(librbd)对象快照oid.snap &gt; osd 端快照序号 ssc-&gt;snapset.seq, 获取head对象就是该快照对应的时间数据对象。</li>
 <li>计算oid.snap首次大于ssc-&gt;snapset。clones列表中的克隆对象，就是oid对应的克隆对象；</li>
 </ul>
-<p>//</p>
 
       
     </div>
@@ -411,7 +410,7 @@
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/08/16/ceph_pg/" rel="next" title="pg">
+              <a href="/2018/09/21/ceph_pg/" rel="next" title="pg">
                 <i class="fa fa-chevron-left"></i> pg
               </a>
             
@@ -421,8 +420,8 @@
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/09/04/cache_lru/" rel="prev" title="cache lru">
-                cache lru <i class="fa fa-chevron-right"></i>
+              <a href="/2018/09/21/go_base/" rel="prev" title="go之基础重温">
+                go之基础重温 <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -500,7 +499,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">23</span>
+                  <span class="site-state-item-count">29</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>

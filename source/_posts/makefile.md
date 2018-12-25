@@ -1,5 +1,5 @@
 ---
-  title： golang中使用makefile
+  title:golang中使用makefile
 ---
 
 Makefile必须以tab来进行缩进

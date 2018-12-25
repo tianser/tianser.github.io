@@ -1,3 +1,7 @@
+---
+  title: ceph log
+---
+
 ## dout
 
 ```c++

@@ -81,6 +81,4 @@ int librados::IoCtxImpl::exec(const object_t& oid, const char *cls, const char *
     rd.call(cls, method, inbl);
     return operate_read(oid, &rd, &outbl);
 }
-
-
 ```

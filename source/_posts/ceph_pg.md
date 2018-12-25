@@ -25,8 +25,14 @@
   pg对应副本所在的OSD列表，列表是有序的，第一个osd 为 primary. 在通常情况下，up set和acting set 相同
 
 - up set
-  假设:acting set [0, 1, 2], 此时osd.0故障，导致monitor重新分配pg的acting set为[3, 1, 2], 此时osd.3不能承载pg的读io，所以向monitor申请一个临时的pg的osd.1 为主osd来承载读写，此时acting set为[0, 1, 2], up set [1, 3, 2]; acting set 与 up set不一致;
-  当osd.3 backfill完成之后, up set, acting set 均为[0, 1, 2]
+  假设:acting set [0, 1, 2], 此时osd.0故障，导致monitor重新分配pg的acting set为[3, 1, 2], 此时osd.3不能承载pg的读io，所以向monitor申请一个临时的pg的osd.1 为主osd来承载读写，此时acting set为[3, 1, 2], up set [1, 3, 2]; acting set 与 up set不一致;
+  当osd.3 backfill完成之后, up set, acting set 均为[3, 1, 2]
+ 
+- current interval && past_interval 
+   在序列(interval)之内，pg的acting set 和 up set不会变化; current是当前的序列，past则是上一个阶段的序列；
+
+- last_epoch_started:  pg peering完成之后的epoch
+- last_epoch_clean:  pg recovery完成，处于clean状态的epoch
 
 ### PGBackend
 PGBackend定义了逻辑上处理IO和副本

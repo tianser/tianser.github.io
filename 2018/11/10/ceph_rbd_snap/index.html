@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="阳台">
 <meta property="og:description" content="摘要ceph快照是基于COW技术基础上实现的， 有rados层来具体实现；每次做完快照后在对卷进行写入操作时触发COW操作，即先拷贝出原对象的数据生成快照对象，然后对原对象进行写入。于此同时，每次快照的操作会更新卷的元数据，以及包括快照ID，快照链，parent信息在内的快照信息； 流程 向monitor发送请求，获取一个最新的快照序号snap_seq, monitor会递增该pool的snap_">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2018-12-28T06:55:25.729Z">
+<meta property="og:updated_time" content="2019-04-22T13:11:44.475Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph_rbd_snap">
 <meta name="twitter:description" content="摘要ceph快照是基于COW技术基础上实现的， 有rados层来具体实现；每次做完快照后在对卷进行写入操作时触发COW操作，即先拷贝出原对象的数据生成快照对象，然后对原对象进行写入。于此同时，每次快照的操作会更新卷的元数据，以及包括快照ID，快照链，parent信息在内的快照信息； 流程 向monitor发送请求，获取一个最新的快照序号snap_seq, monitor会递增该pool的snap_">
@@ -357,7 +357,7 @@
 <li>向monitor发送请求，获取一个最新的快照序号snap_seq, monitor会递增该pool的snap_seq,<br>并返回该值给librbd</li>
 <li>librbd将新的snap_seq替换到原来的image中，snap_name和snap_seq将会保存在rbd的元数据中；</li>
 </ul>
-<figure class="highlight golang"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"># rbd snap create rbd/test.img@test_img_snap</span><br><span class="line"># rbd -p rbd listomapvals rbd_header<span class="number">.134d</span>2ae8944a</span><br></pre></td></tr></table></figure>
+<figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> rbd snap create rbd/test.img@test_img_snap</span></span><br><span class="line"><span class="meta">#</span><span class="bash"> rbd -p rbd listomapvals rbd_header.134d2ae8944a</span></span><br></pre></td></tr></table></figure>
 <ul>
 <li>rbd pool 中并没有新生成object；</li>
 <li>image的快照信息被保存在rbd_header.${image_id} 对象的属性中；</li>

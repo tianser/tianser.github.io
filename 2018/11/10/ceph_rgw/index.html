@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="阳台">
 <meta property="og:description" content="ceph  rgwRGW 为每个 bucket 维护了一份索引，里面保存了 bucket 中全部对象的元数据。 RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求时，这些索引数据非常重要， 比如     - 遍历 bucket中全部对象时。bucket索引信息还有其他用处，     - 版本控制的对象维护日志、     - bucket 配额元数据和跨区同步的日志。     - bucke">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-04-12T09:13:40.669Z">
+<meta property="og:updated_time" content="2019-05-21T06:12:39.351Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph_rgw">
 <meta name="twitter:description" content="ceph  rgwRGW 为每个 bucket 维护了一份索引，里面保存了 bucket 中全部对象的元数据。 RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求时，这些索引数据非常重要， 比如     - 遍历 bucket中全部对象时。bucket索引信息还有其他用处，     - 版本控制的对象维护日志、     - bucket 配额元数据和跨区同步的日志。     - bucke">
@@ -370,6 +370,29 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
         c、对index pool进行scrub和deep-scrub时，该object过大，则极大消耗底层存储设备性能，影响client端io；
 </code></pre><h3 id="bucket-索引文件分片"><a href="#bucket-索引文件分片" class="headerlink" title="bucket 索引文件分片"></a>bucket 索引文件分片</h3><pre><code>用来解决bucket的索引文件过大的问题。 这样bucket的索引对象被分成多个rados对象；
 </code></pre><h3 id="相关参数"><a href="#相关参数" class="headerlink" title="相关参数"></a>相关参数</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line">rgw dynamic resharding = true       //线上应该改成false</span><br><span class="line"></span><br><span class="line">//可根据硬件相应调大(默认是10w，线上一般调大10-15w)</span><br><span class="line">rgw max objs per shard = 100000     </span><br><span class="line">rgw reshard thread interval = 10 min //分片自动线程扫描间隔</span><br></pre></td></tr></table></figure>
+<h3 id="rgw-数据分类："><a href="#rgw-数据分类：" class="headerlink" title="rgw 数据分类："></a>rgw 数据分类：</h3><pre><code>- metadata
+    - user：用户信息
+    - bucket： bucket名字和bucket instance的映射
+    - bucket.instance中是每个bucket instance的信息
+- bucket index
+    - bucket index pool中rados对象的omap中保存了k/v，
+    其中key是用户put的object的名字， value保存了该对象的一些基本元数据信息。
+    每个omap都有一个header，其中存放了bucket统计信息（存放对象个数，占用空间等）
+- data
+    用户put的对象的数据内容存放在一个或者多个rados对象中；
+
+- rgw object分为两部分：
+    一个对象逻辑头(object logical head/olh)，大小512KB；
+    可选的tail： 按照固定大小切片，默认4MB；
+    olh 的对象内容为上传文件的前512KB。如果文件小于该值，则没有tail
+</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> rados -p .hdd_pool listxattr demo-key --cluster ceph  //属性</span></span><br><span class="line">    user.rgw.acl</span><br><span class="line">    user.rgw.content_type  </span><br><span class="line">    user.rgw.etag</span><br><span class="line">    user.rgw.idtag</span><br><span class="line">    user.rgw.manifest</span><br></pre></td></tr></table></figure>
+<pre><code>- manifest
+   rgw object的 manifest 指示了tail部分的分片信息，用于读取对象时查找分片 
+</code></pre><h3 id="rgw-put对象流程"><a href="#rgw-put对象流程" class="headerlink" title="rgw put对象流程"></a>rgw put对象流程</h3><pre><code>- &lt;zone&gt;.rgw.buckets.data pool新加对象(&lt;bucket_id&gt;_&lt;key&gt;)
+- &lt;zone&gt;.rgw.buckets.meta pool中的bucket index对象omap增加该对象信息
+- bucket index对象的omap增加bi log (如果开启bi log和data log)
+- &lt;zone&gt;.rgw.log pool的data log对象的omap增加data log
+</code></pre><p>celery基于分布式消息传递的异步任务队列；<br>    依赖分布式消息传递机制； 这个分布式机制就是celery文档说的broker；</p>
 
       
     </div>
@@ -544,7 +567,7 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph-rgw"><span class="nav-number">1.</span> <span class="nav-text">ceph  rgw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bucket-索引文件分片"><span class="nav-number">2.</span> <span class="nav-text">bucket 索引文件分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关参数"><span class="nav-number">3.</span> <span class="nav-text">相关参数</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph-rgw"><span class="nav-number">1.</span> <span class="nav-text">ceph  rgw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bucket-索引文件分片"><span class="nav-number">2.</span> <span class="nav-text">bucket 索引文件分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关参数"><span class="nav-number">3.</span> <span class="nav-text">相关参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-数据分类："><span class="nav-number">4.</span> <span class="nav-text">rgw 数据分类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-put对象流程"><span class="nav-number">5.</span> <span class="nav-text">rgw put对象流程</span></a></li></ol></div>
             
 
           </div>

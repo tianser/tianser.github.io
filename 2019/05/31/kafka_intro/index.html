@@ -87,10 +87,12 @@
 <meta property="og:site_name" content="阳台">
 <meta property="og:description" content="概述Kafka是一个高吞吐、分布式、基于发布订阅的消息系统，利用Kafka技术可以在廉价的PC Server上搭建起大规模消息系统。 应用场景Kafka具有消息持久化、高吞吐、分布式、多客户端支持、实时等特性，适用于离线和在线的消息消费，如常规的消息收集、网站活性跟踪、聚合统计系统运营数据（监控数据）、日志收集等大量数据的互联网服务的数据收集场景。 - 日志收集（filebeat）: 收集各种服务">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-31T07:31:37.339Z">
+<meta property="og:image" content="http://yoursite.com/images/kafka_struct.png">
+<meta property="og:updated_time" content="2019-05-31T07:35:33.659Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kafka">
 <meta name="twitter:description" content="概述Kafka是一个高吞吐、分布式、基于发布订阅的消息系统，利用Kafka技术可以在廉价的PC Server上搭建起大规模消息系统。 应用场景Kafka具有消息持久化、高吞吐、分布式、多客户端支持、实时等特性，适用于离线和在线的消息消费，如常规的消息收集、网站活性跟踪、聚合统计系统运营数据（监控数据）、日志收集等大量数据的互联网服务的数据收集场景。 - 日志收集（filebeat）: 收集各种服务">
+<meta name="twitter:image" content="http://yoursite.com/images/kafka_struct.png">
 
 
 
@@ -358,8 +360,8 @@
 - 消息系统： 解耦生产者和消费者、缓存消息（kafka缓存7天）
 - 运营指标： 记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告；
 - 流式处理：比如spark streaming和storm；
-</code></pre><h3 id="kafka-架构-和-基本概念"><a href="#kafka-架构-和-基本概念" class="headerlink" title="kafka 架构 和 基本概念"></a>kafka 架构 和 基本概念</h3><pre><code>![](/images/kafka_struct.png)
-- Broker：Kafka集群包含一个或多个服务实例，这些服务实例被称为Broker。是Kafka当中具体处理数据的单元。Kafka支持Broker的水平扩展。一般Broker数据越多，集群的吞吐力就越强。
+</code></pre><h3 id="kafka-架构-和-基本概念"><a href="#kafka-架构-和-基本概念" class="headerlink" title="kafka 架构 和 基本概念"></a>kafka 架构 和 基本概念</h3><p><img src="/images/kafka_struct.png" alt=""></p>
+<pre><code>- Broker：Kafka集群包含一个或多个服务实例，这些服务实例被称为Broker。是Kafka当中具体处理数据的单元。Kafka支持Broker的水平扩展。一般Broker数据越多，集群的吞吐力就越强。
 - Topic：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。
 - Partition：Kafka将Topic分成一个或多个Partition，每个Partition在物理上对应一个文件夹，该文件下存储这个Partition的所有消息。
 - Producer：负责发布消息到Kafka Broker。

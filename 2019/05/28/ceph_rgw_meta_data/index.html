@@ -1,0 +1,749 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ceph," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="ceph_rgw">
+<meta property="og:url" content="http://yoursite.com/2019/05/28/ceph_rgw_meta_data/index.html">
+<meta property="og:site_name" content="阳台">
+<meta property="og:description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-05-31T07:15:01.386Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="ceph_rgw">
+<meta name="twitter:description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/05/28/ceph_rgw_meta_data/"/>
+
+
+
+
+
+  <title>ceph_rgw | 阳台</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阳台</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">既然选择远行,便只顾风雨兼程</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/05/28/ceph_rgw_meta_data/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">ceph_rgw</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-05-28T00:00:00+08:00">
+                2019-05-28
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="线程池入口"><a href="#线程池入口" class="headerlink" title="线程池入口"></a>线程池入口</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RGWRemoteMetaLog</span><br><span class="line">    -&gt; RGWCoroutinesManager </span><br><span class="line"><span class="comment">// RGWRemoteMetaLog::run_sync</span></span><br><span class="line"><span class="keyword">int</span> RGWRemoteMetaLog::run_sync()&#123;</span><br><span class="line">    <span class="comment">//metadata log信息</span></span><br><span class="line">    rgw_mdlog_info mdlog_info;</span><br><span class="line">    r = read_log_info(&amp;mdlog_info);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//metadata 同步状态</span></span><br><span class="line">    rgw_meta_sync_status sync_status;</span><br><span class="line">    r = run(<span class="keyword">new</span> RGWReadSyncStatusCoroutine(&amp;sync_env, &amp;sync_status));</span><br><span class="line">    <span class="comment">//master zone自身进行period判断，并与同步状态信息进行比较，设定初始化状态；</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//是否可进行全量同步(full sync)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+<h3 id="RGW-数据存放规则"><a href="#RGW-数据存放规则" class="headerlink" title="RGW 数据存放规则"></a>RGW 数据存放规则</h3><h4 id="zone级别的placement"><a href="#zone级别的placement" class="headerlink" title="zone级别的placement"></a>zone级别的placement</h4><pre><code>placement rule即数据的存放规则，可在placement rule中定义存储桶索引数据存放的存储
+</code></pre><p>池index pool， 对象数据存放的存储池data pool中，以及通过Multipart 上传大文件临时数据<br>存放的存储池data extra pool </p>
+<pre><code>placement rule是针对所使用的存储池进行定义，而存储池是位于zone 之下的概念，所以在
+</code></pre><p>RGW中将 placement rule 作为一个 zone 级别的配置，其作用影响的力度为存储桶级，即可指定<br>存储桶所使用的placement rule, 那所有上传到该存储桶中的对象数据都会按照该存储桶的place<br>rule 定义的存储规则进行存放。用户为不同的存储桶配置不同的placement rule来实现将不同存<br>储桶中的对象数据存放在不同的存储节点或使用不同的存储策略；</p>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br><span class="line">43</span><br><span class="line">44</span><br><span class="line">45</span><br><span class="line">46</span><br><span class="line">47</span><br><span class="line">48</span><br><span class="line">49</span><br><span class="line">50</span><br><span class="line">51</span><br><span class="line">52</span><br><span class="line">53</span><br><span class="line">54</span><br><span class="line">55</span><br><span class="line">56</span><br><span class="line">57</span><br><span class="line">58</span><br><span class="line">59</span><br><span class="line">60</span><br><span class="line">61</span><br><span class="line">62</span><br><span class="line">63</span><br><span class="line">64</span><br><span class="line">65</span><br><span class="line">66</span><br><span class="line">67</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//查看当前placement rule</span></span><br><span class="line">[root@node122 src]<span class="meta"># radosgw-admin  zone placement list --rgw-zone=default</span></span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        <span class="string">"key"</span>: <span class="string">"default-placement"</span>,</span><br><span class="line">        <span class="string">"val"</span>: &#123;</span><br><span class="line">            <span class="string">"index_pool"</span>: <span class="string">"default.rgw.buckets.index"</span>,</span><br><span class="line">            <span class="string">"data_pool"</span>: <span class="string">"default.rgw.buckets.data"</span>,</span><br><span class="line">            <span class="string">"data_extra_pool"</span>: <span class="string">"default.rgw.buckets.non-ec"</span>,</span><br><span class="line">            <span class="string">"index_type"</span>: <span class="number">0</span>,</span><br><span class="line">            <span class="string">"compression"</span>: <span class="string">""</span></span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line"><span class="comment">//添加placement rule</span></span><br><span class="line">radosgw-admin zone placement add --rgw-zone=<span class="keyword">default</span> --placement-id=test --index_pool=<span class="keyword">default</span>.rgw.buckets.index --data_pool=<span class="keyword">default</span>.rgw.buckets.data.tst --data_extra_pool=<span class="keyword">default</span>.rgw.buckets.non-ec</span><br><span class="line">&#123;</span><br><span class="line">    <span class="string">"id"</span>: <span class="string">"fea1d13c-db14-48b0-9c69-8e7662d64202"</span>,</span><br><span class="line">    <span class="string">"name"</span>: <span class="string">"default"</span>,</span><br><span class="line">    <span class="string">"domain_root"</span>: <span class="string">"default.rgw.meta:root"</span>,</span><br><span class="line">    <span class="string">"control_pool"</span>: <span class="string">"default.rgw.control"</span>,</span><br><span class="line">    <span class="string">"gc_pool"</span>: <span class="string">"default.rgw.log:gc"</span>,</span><br><span class="line">    <span class="string">"lc_pool"</span>: <span class="string">"default.rgw.log:lc"</span>,</span><br><span class="line">    <span class="string">"log_pool"</span>: <span class="string">"default.rgw.log"</span>,</span><br><span class="line">    <span class="string">"intent_log_pool"</span>: <span class="string">"default.rgw.log:intent"</span>,</span><br><span class="line">    <span class="string">"usage_log_pool"</span>: <span class="string">"default.rgw.log:usage"</span>,</span><br><span class="line">    <span class="string">"reshard_pool"</span>: <span class="string">"default.rgw.log:reshard"</span>,</span><br><span class="line">    <span class="string">"user_keys_pool"</span>: <span class="string">"default.rgw.meta:users.keys"</span>,</span><br><span class="line">    <span class="string">"user_email_pool"</span>: <span class="string">"default.rgw.meta:users.email"</span>,</span><br><span class="line">    <span class="string">"user_swift_pool"</span>: <span class="string">"default.rgw.meta:users.swift"</span>,</span><br><span class="line">    <span class="string">"user_uid_pool"</span>: <span class="string">"default.rgw.meta:users.uid"</span>,</span><br><span class="line">    <span class="string">"system_key"</span>: &#123;</span><br><span class="line">        <span class="string">"access_key"</span>: <span class="string">""</span>,</span><br><span class="line">        <span class="string">"secret_key"</span>: <span class="string">""</span></span><br><span class="line">    &#125;,</span><br><span class="line">    <span class="string">"placement_pools"</span>: [</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"key"</span>: <span class="string">"default-placement"</span>,</span><br><span class="line">            <span class="string">"val"</span>: &#123;</span><br><span class="line">                <span class="string">"index_pool"</span>: <span class="string">"default.rgw.buckets.index"</span>,</span><br><span class="line">                <span class="string">"data_pool"</span>: <span class="string">"default.rgw.buckets.data"</span>,</span><br><span class="line">                <span class="string">"data_extra_pool"</span>: <span class="string">"default.rgw.buckets.non-ec"</span>,</span><br><span class="line">                <span class="string">"index_type"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="string">"compression"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;,</span><br><span class="line">        &#123;</span><br><span class="line">            <span class="string">"key"</span>: <span class="string">"test"</span>,</span><br><span class="line">            <span class="string">"val"</span>: &#123;</span><br><span class="line">                <span class="string">"index_pool"</span>: <span class="string">"default.rgw.buckets.index"</span>,</span><br><span class="line">                <span class="string">"data_pool"</span>: <span class="string">"default.rgw.buckets.data.tst"</span>,</span><br><span class="line">                <span class="string">"data_extra_pool"</span>: <span class="string">"default.rgw.buckets.non-ec"</span>,</span><br><span class="line">                <span class="string">"index_type"</span>: <span class="number">0</span>,</span><br><span class="line">                <span class="string">"compression"</span>: <span class="string">""</span></span><br><span class="line">            &#125;</span><br><span class="line">        &#125;</span><br><span class="line">    ],</span><br><span class="line">    <span class="string">"metadata_heap"</span>: <span class="string">""</span>,</span><br><span class="line">    <span class="string">"tier_config"</span>: [],</span><br><span class="line">    <span class="string">"realm_id"</span>: <span class="string">""</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="comment">//也可以通过导出方式来添加</span></span><br><span class="line"># radosgw-admin zone get --rgw-zone=<span class="keyword">default</span> &gt; zone.info </span><br><span class="line"># 编辑placement</span><br><span class="line"># radosgw-admin zone <span class="built_in">set</span> --rgw-zone=<span class="keyword">default</span> &lt; zone.info</span><br></pre></td></tr></table></figure>
+<h4 id="zonegroup-级placement"><a href="#zonegroup-级placement" class="headerlink" title="zonegroup 级placement"></a>zonegroup 级placement</h4><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br></pre></td><td class="code"><pre><span class="line">//查看当前zonegroup 的placement</span><br><span class="line">[root@node122 src]# radosgw-admin zonegroup placement list</span><br><span class="line">[</span><br><span class="line">    &#123;</span><br><span class="line">        "key": "default-placement",</span><br><span class="line">        "val": &#123;</span><br><span class="line">            "name": "default-placement",</span><br><span class="line">            "tags": []</span><br><span class="line">        &#125;</span><br><span class="line">    &#125;</span><br><span class="line">]</span><br><span class="line"></span><br><span class="line">//zonegroup 添加新的placement</span><br><span class="line"><span class="meta">#</span> radosgw-admin zonegroup placement add --rgw-zonegroup=default --placement-id=test</span><br></pre></td></tr></table></figure>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ceph/" rel="tag"># ceph</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/04/09/ceph-fuse/" rel="next" title="fuse原理">
+                <i class="fa fa-chevron-left"></i> fuse原理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/05/31/kafka_intro/" rel="prev" title="kafka">
+                kafka <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">天色渐晚</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#线程池入口"><span class="nav-number">1.</span> <span class="nav-text">线程池入口</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#RGW-数据存放规则"><span class="nav-number">2.</span> <span class="nav-text">RGW 数据存放规则</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#zone级别的placement"><span class="nav-number">2.1.</span> <span class="nav-text">zone级别的placement</span></a></li><li class="nav-item nav-level-4"><a class="nav-link" href="#zonegroup-级placement"><span class="nav-number">2.2.</span> <span class="nav-text">zonegroup 级placement</span></a></li></ol></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">天色渐晚</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

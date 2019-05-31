@@ -87,7 +87,7 @@
 <meta property="og:site_name" content="阳台">
 <meta property="og:description" content="ceph  rgwRGW 为每个 bucket 维护了一份索引，里面保存了 bucket 中全部对象的元数据。 RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求时，这些索引数据非常重要， 比如     - 遍历 bucket中全部对象时。bucket索引信息还有其他用处，     - 版本控制的对象维护日志、     - bucket 配额元数据和跨区同步的日志。     - bucke">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-21T06:12:39.351Z">
+<meta property="og:updated_time" content="2019-05-31T07:15:01.386Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="ceph_rgw">
 <meta name="twitter:description" content="ceph  rgwRGW 为每个 bucket 维护了一份索引，里面保存了 bucket 中全部对象的元数据。 RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求时，这些索引数据非常重要， 比如     - 遍历 bucket中全部对象时。bucket索引信息还有其他用处，     - 版本控制的对象维护日志、     - bucket 配额元数据和跨区同步的日志。     - bucke">
@@ -385,14 +385,30 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
     一个对象逻辑头(object logical head/olh)，大小512KB；
     可选的tail： 按照固定大小切片，默认4MB；
     olh 的对象内容为上传文件的前512KB。如果文件小于该值，则没有tail
-</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span><span class="bash"> rados -p .hdd_pool listxattr demo-key --cluster ceph  //属性</span></span><br><span class="line">    user.rgw.acl</span><br><span class="line">    user.rgw.content_type  </span><br><span class="line">    user.rgw.etag</span><br><span class="line">    user.rgw.idtag</span><br><span class="line">    user.rgw.manifest</span><br></pre></td></tr></table></figure>
+</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="meta">#</span> rados -p .hdd_pool listxattr demo-key --cluster ceph  //属性</span><br><span class="line">    user.rgw.acl</span><br><span class="line">    user.rgw.content_type  </span><br><span class="line">    user.rgw.etag</span><br><span class="line">    user.rgw.idtag</span><br><span class="line">    user.rgw.manifest</span><br></pre></td></tr></table></figure>
 <pre><code>- manifest
    rgw object的 manifest 指示了tail部分的分片信息，用于读取对象时查找分片 
 </code></pre><h3 id="rgw-put对象流程"><a href="#rgw-put对象流程" class="headerlink" title="rgw put对象流程"></a>rgw put对象流程</h3><pre><code>- &lt;zone&gt;.rgw.buckets.data pool新加对象(&lt;bucket_id&gt;_&lt;key&gt;)
 - &lt;zone&gt;.rgw.buckets.meta pool中的bucket index对象omap增加该对象信息
 - bucket index对象的omap增加bi log (如果开启bi log和data log)
 - &lt;zone&gt;.rgw.log pool的data log对象的omap增加data log
-</code></pre><p>celery基于分布式消息传递的异步任务队列；<br>    依赖分布式消息传递机制； 这个分布式机制就是celery文档说的broker；</p>
+</code></pre><h3 id="rgw-上传的两种方式"><a href="#rgw-上传的两种方式" class="headerlink" title="rgw 上传的两种方式"></a>rgw 上传的两种方式</h3><pre><code>- 简单上传
+- 分片上传
+</code></pre><p>使用s3cmd分析分片上传为例：<br>    1、s3cmd put 上传文件大于15M（default，可在conf中修改），默认会使用分片来上传；<br>    2、 请求upload id, 【HTTP POST请求】<br>    <figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">DEBUG: format_uri(): /etag?uploads</span><br><span class="line">DEBUG: Sending request method_string='POST', uri='/etag?uploads', headers=&#123;'x-amz-meta-s3cmd-attrs': 'uid:0/gname:root/uname:root/gid:0/mode:33188/mtime:1489554799/atime:1889554908/md5:cbacae177df231e8b3714bf662a433d9/ctime:1489554799', 'content-type': 'application/octet-stream', 'Authorization': 'AWS PY59Q1KZG848ZU1RJIEP:nOc7HrZh1AqCqXOTS9q1D880FaI=', 'x-amz-date': 'Wed, 15 Mar 2018 05:41:45 +0000', 'x-amz-storage-class': 'STANDARD'&#125;, body=(0 bytes)</span><br></pre></td></tr></table></figure></p>
+<pre><code><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br></pre></td><td class="code"><pre><span class="line">    RGWInitMultipart_ObjStore_S3</span><br><span class="line">        -&gt; RGWInitMultipart_ObjStore</span><br><span class="line">            -&gt; RGWInitMultipart</span><br><span class="line">                -&gt; RGWOp</span><br><span class="line">具体处理流程在RGWInitMultipart::execute()中     </span><br><span class="line">    -&gt;RGWRados::Bucket::UpdateIndex::prepare() //更新相关元数据  </span><br><span class="line">        -&gt; cls_cxx_map_set_val()               //写入rados</span><br><span class="line">            -&gt;write_bucket_header()            //更新rgw_bucket_dir_header</span><br></pre></td></tr></table></figure>
+
+3、上传数据； 【HTTP PUT】
+</code></pre><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">  /etag?partNumber=1&amp;uploadId=2~1SdbLkiHRWfXMXzcqiw5VaiqeH5HLup</span><br><span class="line">    65536 of 15728640     0% in    0s   418.08 kB/sDEBUG: ConnMan.put(): connection put back to pool (http://test.s3.com#2)  </span><br><span class="line">```    </span><br><span class="line">```shell</span><br><span class="line">    RGWPutObj_ObjStore_S3</span><br><span class="line">        -&gt; RGWPutObj_ObjStore</span><br><span class="line">            -&gt; RGWPutObj</span><br><span class="line">                -&gt; RGWOp</span><br><span class="line">    具体处理流程在  RGWPutObj::execute() 中；</span><br><span class="line">        -&gt; GWObjManifest::set_multipart_part_rule()</span><br><span class="line">            -&gt; RGWObjManifest::get_implicit_location()    </span><br><span class="line">                -&gt; RGWRados::Object::Write::write_meta() //写入data对象之后，操作metadata</span><br><span class="line">                    -&gt;  RGWRados::omap_set()   //更新omap信息</span><br></pre></td></tr></table></figure>
+<pre><code>4、分片上传完成【HTTP POST】
+</code></pre><pre><code class="shell">RGWCompleteMultipart_ObjStore_S3
+    -&gt; RGWCompleteMultipart_ObjStore
+        -&gt; RGWCompleteMultipart
+            -&gt; RGWOp
+具体操作在RGWCompleteMultipart::execute()中 
+list_multipart_parts()  //这里会将分片信息加入到manifest中
+    RGWRados::Object::Write::write_meta()   //写入rados
+        _RGWRados::delete_obj()             //删除此处上传的meta obj信息
+</code></pre>
 
       
     </div>
@@ -423,8 +439,8 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
         <div class="post-nav">
           <div class="post-nav-next post-nav-item">
             
-              <a href="/2018/09/21/makefile/" rel="next" title="">
-                <i class="fa fa-chevron-left"></i> 
+              <a href="/2018/11/10/ceph_rbd_snap/" rel="next" title="ceph_rbd_snap">
+                <i class="fa fa-chevron-left"></i> ceph_rbd_snap
               </a>
             
           </div>
@@ -433,8 +449,8 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
 
           <div class="post-nav-prev post-nav-item">
             
-              <a href="/2018/11/10/ceph_rbd_snap/" rel="prev" title="ceph_rbd_snap">
-                ceph_rbd_snap <i class="fa fa-chevron-right"></i>
+              <a href="/2018/12/10/ceph_pg/" rel="prev" title="pg">
+                pg <i class="fa fa-chevron-right"></i>
               </a>
             
           </div>
@@ -512,7 +528,7 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">32</span>
+                  <span class="site-state-item-count">34</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -523,7 +539,7 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">8</span>
+                  <span class="site-state-item-count">9</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -534,7 +550,7 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-count">16</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -567,7 +583,7 @@ RGW 本身并没有足够有效的遍历对象的能力，所以在处理请求�
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph-rgw"><span class="nav-number">1.</span> <span class="nav-text">ceph  rgw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bucket-索引文件分片"><span class="nav-number">2.</span> <span class="nav-text">bucket 索引文件分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关参数"><span class="nav-number">3.</span> <span class="nav-text">相关参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-数据分类："><span class="nav-number">4.</span> <span class="nav-text">rgw 数据分类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-put对象流程"><span class="nav-number">5.</span> <span class="nav-text">rgw put对象流程</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#ceph-rgw"><span class="nav-number">1.</span> <span class="nav-text">ceph  rgw</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#bucket-索引文件分片"><span class="nav-number">2.</span> <span class="nav-text">bucket 索引文件分片</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#相关参数"><span class="nav-number">3.</span> <span class="nav-text">相关参数</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-数据分类："><span class="nav-number">4.</span> <span class="nav-text">rgw 数据分类：</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-put对象流程"><span class="nav-number">5.</span> <span class="nav-text">rgw put对象流程</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#rgw-上传的两种方式"><span class="nav-number">6.</span> <span class="nav-text">rgw 上传的两种方式</span></a></li></ol></div>
             
 
           </div>

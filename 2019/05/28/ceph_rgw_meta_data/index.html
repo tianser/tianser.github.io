@@ -79,18 +79,21 @@
 
 
 
-<meta name="description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+<meta name="description" content="线程池入口如下图所示，从rgw_main.cc   进行异步操作的封装均对RGWAsyncRadosRequest进行相关操作进行重写      对RGWAsyncRadosProcess进行深入123456789101112131415161718192021222324252627282930313233343536373839//rgw_cr_rados.hclass RGWAsyncRad">
 <meta name="keywords" content="ceph">
 <meta property="og:type" content="article">
-<meta property="og:title" content="ceph_rgw">
+<meta property="og:title" content="ceph_rgw_meta_data">
 <meta property="og:url" content="http://yoursite.com/2019/05/28/ceph_rgw_meta_data/index.html">
 <meta property="og:site_name" content="阳台">
-<meta property="og:description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+<meta property="og:description" content="线程池入口如下图所示，从rgw_main.cc   进行异步操作的封装均对RGWAsyncRadosRequest进行相关操作进行重写      对RGWAsyncRadosProcess进行深入123456789101112131415161718192021222324252627282930313233343536373839//rgw_cr_rados.hclass RGWAsyncRad">
 <meta property="og:locale" content="zh-Hans">
-<meta property="og:updated_time" content="2019-05-31T07:15:01.386Z">
+<meta property="og:image" content="http://yoursite.com/images/post/rgw_data_sync_1.png">
+<meta property="og:image" content="http://yoursite.com/images/post/rgw_data_sync_2.png">
+<meta property="og:updated_time" content="2019-05-31T07:52:49.779Z">
 <meta name="twitter:card" content="summary">
-<meta name="twitter:title" content="ceph_rgw">
-<meta name="twitter:description" content="线程池入口123456789101112131415RGWRemoteMetaLog    -&amp;gt; RGWCoroutinesManager // RGWRemoteMetaLog::run_syncint RGWRemoteMetaLog::run_sync()&amp;#123;    //metadata log信息    rgw_mdlog_info mdlog_info;    r = re">
+<meta name="twitter:title" content="ceph_rgw_meta_data">
+<meta name="twitter:description" content="线程池入口如下图所示，从rgw_main.cc   进行异步操作的封装均对RGWAsyncRadosRequest进行相关操作进行重写      对RGWAsyncRadosProcess进行深入123456789101112131415161718192021222324252627282930313233343536373839//rgw_cr_rados.hclass RGWAsyncRad">
+<meta name="twitter:image" content="http://yoursite.com/images/post/rgw_data_sync_1.png">
 
 
 
@@ -126,7 +129,7 @@
 
 
 
-  <title>ceph_rgw | 阳台</title>
+  <title>ceph_rgw_meta_data | 阳台</title>
   
 
 
@@ -280,7 +283,7 @@
 
         
         
-          <h1 class="post-title" itemprop="name headline">ceph_rgw</h1>
+          <h1 class="post-title" itemprop="name headline">ceph_rgw_meta_data</h1>
         
 
         <div class="post-meta">
@@ -352,7 +355,16 @@
       
 
       
-        <h3 id="线程池入口"><a href="#线程池入口" class="headerlink" title="线程池入口"></a>线程池入口</h3><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RGWRemoteMetaLog</span><br><span class="line">    -&gt; RGWCoroutinesManager </span><br><span class="line"><span class="comment">// RGWRemoteMetaLog::run_sync</span></span><br><span class="line"><span class="keyword">int</span> RGWRemoteMetaLog::run_sync()&#123;</span><br><span class="line">    <span class="comment">//metadata log信息</span></span><br><span class="line">    rgw_mdlog_info mdlog_info;</span><br><span class="line">    r = read_log_info(&amp;mdlog_info);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//metadata 同步状态</span></span><br><span class="line">    rgw_meta_sync_status sync_status;</span><br><span class="line">    r = run(<span class="keyword">new</span> RGWReadSyncStatusCoroutine(&amp;sync_env, &amp;sync_status));</span><br><span class="line">    <span class="comment">//master zone自身进行period判断，并与同步状态信息进行比较，设定初始化状态；</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//是否可进行全量同步(full sync)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
+        <h3 id="线程池入口"><a href="#线程池入口" class="headerlink" title="线程池入口"></a>线程池入口</h3><pre><code>如下图所示，从rgw_main.cc 
+</code></pre><p><img src="/images/post/rgw_data_sync_1.png" alt=""></p>
+<pre><code>进行异步操作的封装均对RGWAsyncRadosRequest进行相关操作进行重写
+</code></pre><p> <img src="/images/post/rgw_data_sync_2.png" alt="">   </p>
+<p>对RGWAsyncRadosProcess进行深入<br><figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">//rgw_cr_rados.h</span></span><br><span class="line"><span class="class"><span class="keyword">class</span> <span class="title">RGWAsyncRadosProcessor</span>&#123;</span></span><br><span class="line">    <span class="built_in">deque</span>&lt;RGWAsyncRadosRequest* &gt; m_req_queue;</span><br><span class="line">    <span class="built_in">std</span>::atomic&lt;<span class="keyword">bool</span>&gt; going_down = &#123; <span class="literal">false</span> &#125;;</span><br><span class="line"><span class="keyword">protected</span>:</span><br><span class="line">    RGWRados *store;</span><br><span class="line">    ThreadPool m_tp;</span><br><span class="line">    Throttle      req_throttle;</span><br><span class="line">    </span><br><span class="line">    <span class="class"><span class="keyword">struct</span> <span class="title">RGWWQ</span> :</span> <span class="keyword">public</span> ThreadPool::WorkQueue&lt;RGWAsyncRadosRequest&gt;&#123;</span><br><span class="line">        RGWAsyncRadosProcessor *processor;</span><br><span class="line">        RGWWQ(RGWAsyncRadosProcessor *p, <span class="keyword">time_t</span> time_out, <span class="keyword">time_t</span> suicide_timeout, ThreadPool *tp):</span><br><span class="line">            ThreadPool::WorkQueue&lt;RGWAsyncRadosRequest&gt;(<span class="string">"RGWWQ"</span>, timeout, suicide_timeout, tp), processor(p)&#123;</span><br><span class="line">            &#125;</span><br><span class="line">        </span><br><span class="line">        <span class="keyword">bool</span> _enqueue(RGWAsyncRadosRequest* req) override;</span><br><span class="line">        <span class="keyword">void</span> _dequeue(RGWAsyncRadosRequest* req) override&#123;</span><br><span class="line">            ceph_abort();</span><br><span class="line">        &#125;</span><br><span class="line">        <span class="keyword">bool</span> _empty() ovrride;</span><br><span class="line">        RGWAsyncRadosRequest *_dequeue() override;</span><br><span class="line">        <span class="keyword">using</span> ThreadPool::WorkQueue&lt;RGWAsyncRadosRequest&gt;::_process;</span><br><span class="line">        <span class="keyword">void</span> _process(RGWAsyncRadosRequest *req, ThreadPool::TPHandle&amp; handle) override;</span><br><span class="line">        <span class="keyword">void</span> _dump_queue();</span><br><span class="line">        <span class="keyword">void</span> _clear() override&#123;</span><br><span class="line">            ceph_assert(processor-&gt;m_req_queue.empty());</span><br><span class="line">        &#125;req_wq;</span><br><span class="line">    &#125;</span><br><span class="line"><span class="keyword">public</span>:</span><br><span class="line">        RGWAsyncRadosProcessor(RGWRados* _store, <span class="keyword">int</span> num_threads);</span><br><span class="line">        ~RGWAsyncRadosProcessor()&#123;&#125;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">start</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">stop</span><span class="params">()</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">handle_request</span><span class="params">(RGWAsyncRadosRequest* req)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">void</span> <span class="title">queue</span><span class="params">(RGWAsyncRadosRequest* req)</span></span>;</span><br><span class="line">        <span class="function"><span class="keyword">bool</span> <span class="title">is_going_down</span><span class="params">()</span></span>&#123;</span><br><span class="line">            <span class="keyword">return</span> going_down;</span><br><span class="line">        &#125;   </span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<ul>
+<li>使用工作队列进行封装 【struct RGWWQ : public ThreadPool::WorkQueue】</li>
+<li>关注_process()即可</li>
+</ul>
+<figure class="highlight c++"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br></pre></td><td class="code"><pre><span class="line">RGWRemoteMetaLog</span><br><span class="line">    -&gt; RGWCoroutinesManager </span><br><span class="line"><span class="comment">// RGWRemoteMetaLog::run_sync</span></span><br><span class="line"><span class="keyword">int</span> RGWRemoteMetaLog::run_sync()&#123;</span><br><span class="line">    <span class="comment">//metadata log信息</span></span><br><span class="line">    rgw_mdlog_info mdlog_info;</span><br><span class="line">    r = read_log_info(&amp;mdlog_info);</span><br><span class="line"></span><br><span class="line">    <span class="comment">//metadata 同步状态</span></span><br><span class="line">    rgw_meta_sync_status sync_status;</span><br><span class="line">    r = run(<span class="keyword">new</span> RGWReadSyncStatusCoroutine(&amp;sync_env, &amp;sync_status));</span><br><span class="line">    <span class="comment">//master zone自身进行period判断，并与同步状态信息进行比较，设定初始化状态；</span></span><br><span class="line"></span><br><span class="line">    <span class="comment">//是否可进行全量同步(full sync)</span></span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure>
 <h3 id="RGW-数据存放规则"><a href="#RGW-数据存放规则" class="headerlink" title="RGW 数据存放规则"></a>RGW 数据存放规则</h3><h4 id="zone级别的placement"><a href="#zone级别的placement" class="headerlink" title="zone级别的placement"></a>zone级别的placement</h4><pre><code>placement rule即数据的存放规则，可在placement rule中定义存储桶索引数据存放的存储
 </code></pre><p>池index pool， 对象数据存放的存储池data pool中，以及通过Multipart 上传大文件临时数据<br>存放的存储池data extra pool </p>
 <pre><code>placement rule是针对所使用的存储池进行定义，而存储池是位于zone 之下的概念，所以在

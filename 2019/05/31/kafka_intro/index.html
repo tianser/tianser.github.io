@@ -88,7 +88,7 @@
 <meta property="og:description" content="概述Kafka是一个高吞吐、分布式、基于发布订阅的消息系统，利用Kafka技术可以在廉价的PC Server上搭建起大规模消息系统。 应用场景Kafka具有消息持久化、高吞吐、分布式、多客户端支持、实时等特性，适用于离线和在线的消息消费，如常规的消息收集、网站活性跟踪、聚合统计系统运营数据（监控数据）、日志收集等大量数据的互联网服务的数据收集场景。 - 日志收集（filebeat）: 收集各种服务">
 <meta property="og:locale" content="zh-Hans">
 <meta property="og:image" content="http://yoursite.com/images/post/kafka_struct.png">
-<meta property="og:updated_time" content="2019-05-31T07:53:00.155Z">
+<meta property="og:updated_time" content="2019-07-31T08:36:57.894Z">
 <meta name="twitter:card" content="summary">
 <meta name="twitter:title" content="kafka">
 <meta name="twitter:description" content="概述Kafka是一个高吞吐、分布式、基于发布订阅的消息系统，利用Kafka技术可以在廉价的PC Server上搭建起大规模消息系统。 应用场景Kafka具有消息持久化、高吞吐、分布式、多客户端支持、实时等特性，适用于离线和在线的消息消费，如常规的消息收集、网站活性跟踪、聚合统计系统运营数据（监控数据）、日志收集等大量数据的互联网服务的数据收集场景。 - 日志收集（filebeat）: 收集各种服务">
@@ -361,15 +361,16 @@
 - 运营指标： 记录运营监控数据。包括收集各种分布式应用的数据，生产各种操作的集中反馈，比如报警和报告；
 - 流式处理：比如spark streaming和storm；
 </code></pre><h3 id="kafka-架构-和-基本概念"><a href="#kafka-架构-和-基本概念" class="headerlink" title="kafka 架构 和 基本概念"></a>kafka 架构 和 基本概念</h3><p><img src="/images/post/kafka_struct.png" alt=""></p>
-<pre><code>- Broker：Kafka集群包含一个或多个服务实例，这些服务实例被称为Broker。是Kafka当中具体处理数据的单元。Kafka支持Broker的水平扩展。一般Broker数据越多，集群的吞吐力就越强。
-- Topic：每条发布到Kafka集群的消息都有一个类别，这个类别被称为Topic。
+<pre><code>- Broker：Kafka集群中的实例，这些服务实例被称为Broker。是Kafka当中具体处理数据的单元。Kafka支持Broker的水平扩展。一般Broker数据越多，集群的吞吐力就越强。
+- Topic：topic的存放形式，每一个topic都可以设置partition数量。partition的数量决定了log的数量。producer 在生产消息时，会把消息发布到topic的各个partition中。上面说的副本都是以partition为单位的，不过只有一个partition的副本会被选为leader作为读写用。
 - Partition：Kafka将Topic分成一个或多个Partition，每个Partition在物理上对应一个文件夹，该文件下存储这个Partition的所有消息。
 - Producer：负责发布消息到Kafka Broker。
 - Consumer：消息消费者，从Kafka Broker读取消息的客户端。
 - Consumer Group：每个Consumer属于一个特定的Consumer Group（可为每个Consumer指
 定group name）。
 - ZooKeeper：kafka与Zookeeper级联，通过Zookeeper管理级联配置，选举Leader。
-</code></pre><p>&lt; — 待续 — &gt;</p>
+</code></pre><h3 id="kafka-相关操作"><a href="#kafka-相关操作" class="headerlink" title="kafka 相关操作"></a>kafka 相关操作</h3><figure class="highlight shell"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br></pre></td><td class="code"><pre><span class="line">//查看topics</span><br><span class="line"><span class="meta">#</span>bin/kafka-topics.sh --list --zookeeper localhost:2181/kafka</span><br><span class="line"></span><br><span class="line">//查看topic中的Partition信息</span><br><span class="line"><span class="meta">#</span>bin/kafka-topics.sh --describe --zookeeper localhost:2181/kafka --topic objscenesserver</span><br><span class="line">Topic: objscenesserver  PartitionCount:15 ReplicationFactor:1 Configs:</span><br><span class="line">  Topic: objscenesserver Partition: 0  Leader: 2 Replicas: 2 Isr: 2</span><br><span class="line">  ......</span><br><span class="line">  Topic: objscenesserver Partition: 13 Leader: 0 Replicas: 0 Isr: 0</span><br><span class="line">  Topic: objscenesserver Partition: 14 Leader: 1 Replicas: 1 Isr: 1</span><br><span class="line"></span><br><span class="line"><span class="meta">#</span> 修改topic的partition数量（只增加不减少）</span><br><span class="line">bin/kafka-topics.sh --alter --zookeeper 127.0.0.1:2183 --partitions 10 --topic test0</span><br></pre></td></tr></table></figure>
+<p>&lt; — 待续 — &gt;</p>
 
       
     </div>
@@ -409,6 +410,10 @@
           <span class="post-nav-divider"></span>
 
           <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/12/leveldb_init/" rel="prev" title="存储引擎">
+                存储引擎 <i class="fa fa-chevron-right"></i>
+              </a>
             
           </div>
         </div>
@@ -485,7 +490,7 @@
               
                 <a href="/archives/">
               
-                  <span class="site-state-item-count">34</span>
+                  <span class="site-state-item-count">41</span>
                   <span class="site-state-item-name">日志</span>
                 </a>
               </div>
@@ -496,7 +501,7 @@
               
               <div class="site-state-item site-state-categories">
                 <a href="/categories/index.html">
-                  <span class="site-state-item-count">9</span>
+                  <span class="site-state-item-count">12</span>
                   <span class="site-state-item-name">分类</span>
                 </a>
               </div>
@@ -507,7 +512,7 @@
               
               <div class="site-state-item site-state-tags">
                 <a href="/tags/index.html">
-                  <span class="site-state-item-count">16</span>
+                  <span class="site-state-item-count">19</span>
                   <span class="site-state-item-name">标签</span>
                 </a>
               </div>
@@ -540,7 +545,7 @@
             
 
             
-              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景"><span class="nav-number">2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka-架构-和-基本概念"><span class="nav-number">3.</span> <span class="nav-text">kafka 架构 和 基本概念</span></a></li></ol></div>
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#概述"><span class="nav-number">1.</span> <span class="nav-text">概述</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#应用场景"><span class="nav-number">2.</span> <span class="nav-text">应用场景</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka-架构-和-基本概念"><span class="nav-number">3.</span> <span class="nav-text">kafka 架构 和 基本概念</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#kafka-相关操作"><span class="nav-number">4.</span> <span class="nav-text">kafka 相关操作</span></a></li></ol></div>
             
 
           </div>

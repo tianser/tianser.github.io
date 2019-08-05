@@ -1,0 +1,1116 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="ceph," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="存储引擎动态查找树(为了快速查找)主要有：     - 二叉查找树（BST【中序遍历是一个递增序列，用来判定是否是BST】），     - 平衡二叉树（AVL， 如何判定是否是AVL树）     - 红黑树     - B树 （平衡多路查找树）     - B+树 二叉树存储在磁盘上，则io太多；所以B树，B+树比较适合关系型数据库的索引（MySQL）  - Hash存储引擎     哈希表的持久">
+<meta name="keywords" content="ceph">
+<meta property="og:type" content="article">
+<meta property="og:title" content="存储引擎">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/storage_enginer/index.html">
+<meta property="og:site_name" content="阳台">
+<meta property="og:description" content="存储引擎动态查找树(为了快速查找)主要有：     - 二叉查找树（BST【中序遍历是一个递增序列，用来判定是否是BST】），     - 平衡二叉树（AVL， 如何判定是否是AVL树）     - 红黑树     - B树 （平衡多路查找树）     - B+树 二叉树存储在磁盘上，则io太多；所以B树，B+树比较适合关系型数据库的索引（MySQL）  - Hash存储引擎     哈希表的持久">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-08-01T08:42:46.003Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="存储引擎">
+<meta name="twitter:description" content="存储引擎动态查找树(为了快速查找)主要有：     - 二叉查找树（BST【中序遍历是一个递增序列，用来判定是否是BST】），     - 平衡二叉树（AVL， 如何判定是否是AVL树）     - 红黑树     - B树 （平衡多路查找树）     - B+树 二叉树存储在磁盘上，则io太多；所以B树，B+树比较适合关系型数据库的索引（MySQL）  - Hash存储引擎     哈希表的持久">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/storage_enginer/"/>
+
+
+
+
+
+  <title>存储引擎 | 阳台</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阳台</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">既然选择远行,便只顾风雨兼程</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/storage_enginer/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">存储引擎</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-12T00:00:00+08:00">
+                2019-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/ceph/" itemprop="url" rel="index">
+                    <span itemprop="name">ceph</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="存储引擎"><a href="#存储引擎" class="headerlink" title="存储引擎"></a>存储引擎</h3><pre><code>动态查找树(为了快速查找)主要有：
+    - 二叉查找树（BST【中序遍历是一个递增序列，用来判定是否是BST】），
+    - 平衡二叉树（AVL， 如何判定是否是AVL树）
+    - 红黑树
+    - B树 （平衡多路查找树）
+    - B+树
+二叉树存储在磁盘上，则io太多；所以B树，B+树比较适合关系型数据库的索引（MySQL）
+
+- Hash存储引擎
+    哈希表的持久化实现，支持增、删、改以及随机读取操作，但不支持顺序扫描，对应的存储系统为key-value存储系统。对于key-value的插入以及查询，哈希表的复杂度都是O(1)，明显比树的操作O(n)快,如果不需要有序的遍历数据，哈希表性能最好。
+    相关存储系统：Bitcask、ceph
+
+- BTree存储引擎
+    应用最为广泛的数据结构；尤其在数据库领域。
+    不仅支持单条记录的增、删、读、改操作，还支持顺序扫描（B+树的叶子节点之间的指针），对应的存储系统就是关系数据库（Mysql等）
+- LSMTree存储引擎（代表就是HBase， leveldb）
+    同样支持增、删、读、改、顺序扫描操作。而且通过批量存储技术规避磁盘随机写入问题。当然凡事有利有弊，LSM树和B+树相比，LSM树牺牲了部分读性能，用来大幅提高写性能。
+    适用于索引插入比检索更频繁的应用系统；
+</code></pre><p>  分为以上三类；</p>
+<p>B+树和LSMTree比较：</p>
+<pre><code>- LSM具有批量特性，存储延迟。当写读比例很大的时候（写比读多），LSM树相比于B树有更好的性能。因为随着insert操作，为了维护B+树结构，节点分裂。读磁盘的随机读写概率会变大，性能会逐渐减弱。
+- B树的写入过程：对B树的写入过程是一次原位写入的过程，主要分为两个部分，首先是查找到对应的块的位置，然后将新数据写入到刚才查找到的数据块中，然后再查找到块所对应的磁盘物理位置，将数据写入去。当然，在内存比较充足的时候，因为B树的一部分可以被缓存在内存中，所以查找块的过程有一定概率可以在内存内完成，不过为了表述清晰，我们就假定内存很小，只够存一个B树块大小的数据吧。可以看到，在上面的模式中，需要两次随机寻道（一次查找，一次原位写），才能够完成一次数据的写入，代价还是很高的。
+</code></pre><p>LSM：</p>
+<ul>
+<li>Bloom filter: 就是个带随机概率的bitmap,可以快速的告诉你，某一个小的有序结构里有没有指定的那个数据的。于是就可以不用二分查找，而只需简单的计算几次就能知道数据是否在某个小集合里啦。效率得到了提升，但付出的是空间代价。</li>
+<li>compact:小树合并为大树:因为小树性能有问题，所以要有个进程不断地将小树合并到大树上，这样大部分的老数据查询也可以直接使用log2N的方式找到，不需要再进行(N/m)*log2n的查询了     </li>
+</ul>
+<p>LSM设计目地：<br>    1、顺序读写磁盘快于随机读写磁盘（大约等于磁盘的理论速度），这就要求避免随机读写（最好是将随机读写设计成顺序读写）；</p>
+<pre><code>2、将数据添加到文件（顺序写log），这就带来了怎么解决读的问题；
+</code></pre><p>需要如何设计来为复杂的读场景（按key查找或者range）提供高效的性能；</p>
+<pre><code>- 二分查找: 将文件数据有序保存，使用二分查找来完成特定key的查找。
+- 哈希：用哈希将数据分割为不同的bucket
+- B+树：使用B+树 或者 ISAM 等方法，可以减少外部文件的读取
+- 外部文件： 将数据保存为日志，并创建一个hash或者查找树映射相应的文件。
+</code></pre><p>平和树合并/跳表合并/有序链表合并     </p>
+<p>aio 简单介绍</p>
+<p>说到 aio，会有三个东西：<br>posix aio，在用户态使用 glic 实现，维护一个线程池来模拟异步IO。接口为 aio_read/aio_write/aio_xxxx。性能较差。<br>linux aio，linux 特有的 aio 实现，接口为 aio_submit/aio_cancel 等5个函数。<br>libaio，oracle 对 linux aio 的包装。</p>
+<p>// description:<br>// Thread safety<br>// Writes require external synchronization, most likely a mutex.<br>// Reads require a guarantee that the SkipList will not be destroyed while the read is in progress.  Apart from that, reads progress  without any internal locking or synchronization.<br>//<br>// Invariants:<br>// (1) Allocated nodes are never deleted until the SkipList is destroyed.  This is trivially guaranteed by the code since we never delete any skip list nodes.<br>// (2) The contents of a Node except for the next/prev pointers are immutable after the Node has been linked into the SkipList.  Only Insert() modifies the list, and it is careful to initialize a node and use release-stores to publish the nodes in one or more lists.</p>
+<pre><code>template&lt;typename Key, class Comparator&gt;
+class SkipList {
+    private:
+         struct Node;
+
+    public:
+    // Create a new SkipList object that will use &quot;cmp&quot; for comparing keys, and will allocate memory using &quot;*arena&quot;.  Objects allocated in the arena must remain allocated for the lifetime of the skiplist object.
+    explicit SkipList(Comparator cmp, Arena* arena);
+    // Insert key into the list.
+    // REQUIRES: nothing that compares equal to key is currently in the list.
+    void Insert(const Key&amp; key);                        // 插入一个key到Skiplist中
+    // Returns true iff an entry that compares equal to key is in the list.
+    bool Contains(const Key&amp; key) const;                    // Skiplist中key的节点是否存在
+
+    private:
+       enum { kMaxHeight = 12 };                        // 最大level
+
+    // Immutable after construction
+    Comparator const compare_;                      // key值的比较函数，一旦初始化就不能变化了（当插入一些数据后，改变key，状态不可控）
+    Arena* const arena_;    // Arena used for allocations of nodes      // levelDB中使用的Arena内存池对象
+    Node* const head_;                          // Skiplist头结点
+
+    // Modified only by Insert().  Read racily by readers, but stale
+    // values are ok.
+    port::AtomicPointer max_height_;   // Height of the entire list     // Skiplist层数
+
+    inline int GetMaxHeight() const {                       // 返回Skiplist的层数
+        return reinterpret_cast&lt;intptr_t&gt;(max_height_.NoBarrier_Load());
+    }
+
+    // Read/written only by Insert().
+    Random rnd_;                                // 随机器，产生随机的level层数
+
+    Node* NewNode(const Key&amp; key, int height);              // 新建一个level=height，键位key的节点
+    int RandomHeight();                         // 随机产生一个level层数
+    bool Equal(const Key&amp; a, const Key&amp; b) const { return (compare_(a, b) == 0); }  // 比较2个key是否相等
+
+    // Return true if key is greater than the data stored in &quot;n&quot;
+    bool KeyIsAfterNode(const Key&amp; key, Node* n) const;         // 比较key与Node n中的key，是否key在后面
+
+    // Return the earliest node that comes at or after key.
+    // Return NULL if there is no such node.
+    // If prev is non-NULL, fills prev[level] with pointer to previous
+    // node at &quot;level&quot; for every level in [0..max_height_-1].
+    Node* FindGreaterOrEqual(const Key&amp; key, Node** prev) const;    // 找到key对应的Node或是key后面紧邻的Node
+
+    // Return the latest node with a key &lt; key, return head_ if there is no such node.
+    Node* FindLessThan(const Key&amp; key) const;               // 找到key前面紧邻的Node
+
+    // Return the last node in the list.
+    // Return head_ if list is empty.
+    Node* FindLast() const;                         // Skiplist最后一个Node
+
+    // No copying allowed
+    SkipList(const SkipList&amp;);                      // 拷贝构造和赋值构造操作不允许
+    void operator=(const SkipList&amp;);
+    };
+
+// Implementation details follow
+template&lt;typename Key, class Comparator&gt;
+struct SkipList&lt;Key,Comparator&gt;::Node {                 // Skiplist节点Node定义
+    explicit Node(const Key&amp; k) : key(k) { }
+    Key const key;
+    // Accessors/mutators for links.  Wrapped in methods so we can add the appropriate barriers as necessary.
+    Node* Next(int n) {
+        assert(n &gt;= 0);
+        // Use an &apos;acquire load&apos; so that we observe a fully initialized version of the returned Node.
+        return reinterpret_cast&lt;Node*&gt;(next_[n].Acquire_Load());
+    }
+    void SetNext(int n, Node* x) {
+        assert(n &gt;= 0);
+        // Use a &apos;release store&apos; so that anybody who reads through this pointer observes a fully initialized version of the inserted node.
+        next_[n].Release_Store(x);
+    }
+
+    // No-barrier variants that can be safely used in a few locations.
+    Node* NoBarrier_Next(int n) {
+        assert(n &gt;= 0);
+        return reinterpret_cast&lt;Node*&gt;(next_[n].NoBarrier_Load());
+    }
+    void NoBarrier_SetNext(int n, Node* x) {
+        assert(n &gt;= 0);
+        next_[n].NoBarrier_Store(x);
+    }
+    private:
+    // Array of length equal to the node height.  next_[0] is lowest level link.
+    port::AtomicPointer next_[1];                           // forward数组指针
+    };
+
+template&lt;typename Key, class Comparator&gt;
+typename SkipList&lt;Key,Comparator&gt;::Node* SkipList&lt;Key,Comparator&gt;::NewNode(const Key&amp; key, int height) {    // 新建一个Node节点（指定key及level层数）
+    char* mem = arena_-&gt;AllocateAligned(sizeof(Node) + sizeof(port::AtomicPointer) * (height - 1));
+    return new (mem) Node(key);   // 显式调用new
+}
+ template&lt;typename Key, class Comparator&gt;
+SkipList&lt;Key,Comparator&gt;::SkipList(Comparator cmp, Arena* arena)                            // 构造函数
+: compare_(cmp),
+arena_(arena),
+head_(NewNode(0 /* any key will do */, kMaxHeight)),                                    // 头节点的key没有意义
+max_height_(reinterpret_cast&lt;void*&gt;(1)),
+rnd_(0xdeadbeef) {
+    for (int i = 0; i &lt; kMaxHeight; i++) {
+        head_-&gt;SetNext(i, NULL);                // 初始化头结点
+    }
+}
+
+template&lt;typename Key, class Comparator&gt;
+int SkipList&lt;Key,Comparator&gt;::RandomHeight() {                                       // 返回随机高度(Skiplist依赖于这个随机性)
+    // Increase height with probability 1 in kBranching
+    static const unsigned int kBranching = 4;
+    int height = 1;
+    while (height &lt; kMaxHeight &amp;&amp; ((rnd_.Next() % kBranching) == 0)) {  //? 直接取一个随机数不行？为什么要循环几次？
+        height++;
+    }
+    assert(height &gt; 0);
+    assert(height &lt;= kMaxHeight);
+    return height;
+}
+
+template&lt;typename Key, class Comparator&gt;
+bool SkipList&lt;Key,Comparator&gt;::KeyIsAfterNode(const Key&amp; key, Node* n) const {                  // Return true if key is greater than the key stored in &quot;n&quot;
+    // NULL n is considered infinite，NULL被视为无限大（这样就考虑了结尾的NIL）
+    return (n != NULL) &amp;&amp; (compare_(n-&gt;key, key) &lt; 0);
+}
+
+template&lt;typename Key, class Comparator&gt;
+typename SkipList&lt;Key,Comparator&gt;::Node* SkipList&lt;Key,Comparator&gt;::FindGreaterOrEqual(const Key&amp; key, Node** prev)   const {     // 
+    Node* x = head_;
+    int level = GetMaxHeight() - 1;
+    while (true) {
+        Node* next = x-&gt;Next(level);
+        if (KeyIsAfterNode(key, next)) {                // key在next节点后面，如果返回true，那么肯定next不为NULL
+            // Keep searching in this list
+            x = next;
+        } else {
+            if (prev != NULL)   prev[level] = x;                // 当前level上，x为高度&gt;=key节点高度，且正好排在其前面，插入和删除时使用
+            if (level == 0) {
+                return next;
+           } else {
+                // Switch to next list( low level link list)
+                level--;
+            }
+        }
+    }
+}
+
+template&lt;typename Key, class Comparator&gt;
+typename SkipList&lt;Key,Comparator&gt;::Node*  SkipList&lt;Key,Comparator&gt;::FindLessThan(const Key&amp; key) const {   // Return the latest node with a key &lt; key, return head_ if there is no such node.
+    Node* x = head_;
+    int level = GetMaxHeight() - 1;
+    while (true) {
+        assert(x == head_ || compare_(x-&gt;key, key) &lt; 0);            // 
+        Node* next = x-&gt;Next(level);
+        if (next == NULL || compare_(next-&gt;key, key) &gt;= 0) {            // 从最高level尽可能向后移动更远的距离
+            // 后面key&gt;查找的key时，或next为空时，level--，直到level=0
+            if (level == 0) {
+                return x;
+                } else {
+                // Switch to next list
+                level--;                        // 从最高层往下后续查找
+          }
+      } else {
+            x = next;
+        }
+    }
+}
+template&lt;typename Key, class Comparator&gt;
+typename SkipList&lt;Key,Comparator&gt;::Node* SkipList&lt;Key,Comparator&gt;::FindLast() const {       // 先从最高level走到头，然后减少level继续走到头，一直到level=0
+    Node* x = head_;
+    int level = GetMaxHeight() - 1;
+    while (true) {
+        Node* next = x-&gt;Next(level);
+        if (next == NULL) {
+            if (level == 0) {
+                return x;
+            } else {
+                // Switch to next list
+                level--;
+            }
+      } else {
+            x = next;
+    }
+ }
+}
+
+template&lt;typename Key, class Comparator&gt;
+void SkipList&lt;Key,Comparator&gt;::Insert(const Key&amp; key) {                         // 插入key节点
+    // TODO(opt): We can use a barrier-free variant of FindGreaterOrEqual()
+    // here since Insert() is externally synchronized.
+    Node* prev[kMaxHeight];
+    Node* x = FindGreaterOrEqual(key, prev);                                // prev记录每个level上前一个节点
+
+    // Our data structure does not allow duplicate insertion
+    assert(x == NULL || !Equal(key, x-&gt;key));
+
+    int height = RandomHeight();
+    if (height &gt; GetMaxHeight()) {
+        for (int i = GetMaxHeight(); i &lt; height; i++) {
+            prev[i] = head_;
+        }
+        //fprintf(stderr, &quot;Change height from %d to %d\n&quot;, max_height_, height);
+
+        // It is ok to mutate max_height_ without any synchronization
+        // with concurrent readers.  A concurrent reader that observes
+        // the new value of max_height_ will see either the old value of
+        // new level pointers from head_ (NULL), or a new value set in
+        // the loop below.  In the former case the reader will
+        // immediately drop to the next level since NULL sorts after all
+        // keys.  In the latter case the reader will use the new node.
+        max_height_.NoBarrier_Store(reinterpret_cast&lt;void*&gt;(height));
+    }
+
+    x = NewNode(key, height);   // 新建一个Node
+    for (int i = 0; i &lt; height; i++) {  // 根据当前节点的level层数，设置每个level的指针
+        // NoBarrier_SetNext() suffices since we will add a barrier when we publish a pointer to &quot;x&quot; in prev[i].
+        x-&gt;NoBarrier_SetNext(i, prev[i]-&gt;NoBarrier_Next(i));
+        prev[i]-&gt;SetNext(i, x);
+    }
+}
+
+template&lt;typename Key, class Comparator&gt;
+bool SkipList&lt;Key,Comparator&gt;::Contains(const Key&amp; key) const { // Skiplist是否包含key
+    Node* x = FindGreaterOrEqual(key, NULL);                // 查找大于或等于key的节点
+    if (x != NULL &amp;&amp; Equal(key, x-&gt;key)) {              // 非空，且相同，表示包含
+        return true;
+   } else {
+        return false;
+   }
+}
+
+    // Iteration over the contents of a skiplist
+    template&lt;typename Key, class Comparator&gt;
+    class SkipList&lt;Key,Comparator&gt;::Iterator {                                   // Skiplist迭代器
+        public:
+        // Initialize an iterator over the specified list.
+        // The returned iterator is not valid.
+        explicit Iterator(const SkipList* list);
+
+        // Returns true iff the iterator is positioned at a valid node.
+        bool Valid() const;
+
+        // Returns the key at the current position.
+        // REQUIRES: Valid()
+        const Key&amp; key() const;
+
+        // Advances to the next position.
+        // REQUIRES: Valid()
+        void Next();
+
+        // Advances to the previous position.
+        // REQUIRES: Valid()
+        void Prev();
+
+        // Advance to the first entry with a key &gt;= target
+        void Seek(const Key&amp; target);
+
+        // Position at the first entry in list.
+        // Final state of iterator is Valid() iff list is not empty.
+        void SeekToFirst();
+
+        // Position at the last entry in list.
+        // Final state of iterator is Valid() iff list is not empty.
+        void SeekToLast();
+
+        private:
+                  const SkipList* list_;
+                  Node* node_;
+                  // Intentionally copyable 采用默认的copy构造函数，成员直接赋值
+        };
+    template&lt;typename Key, class Comparator&gt;
+    inline SkipList&lt;Key,Comparator&gt;::Iterator::Iterator(const SkipList* list) {         // 构造函数，初始化iterator
+           list_ = list;
+          node_ = NULL;
+    }
+
+template&lt;typename Key, class Comparator&gt;
+inline bool SkipList&lt;Key,Comparator&gt;::Iterator::Valid() const {             // Returns true iff the iterator is positioned at a valid node.
+    return node_ != NULL;
+}
+
+template&lt;typename Key, class Comparator&gt;
+inline const Key&amp; SkipList&lt;Key,Comparator&gt;::Iterator::key() const {         // Returns the key at the current position.
+    assert(Valid());
+    return node_-&gt;key;
+}
+
+template&lt;typename Key, class Comparator&gt;
+inline void SkipList&lt;Key,Comparator&gt;::Iterator::Next() {                    // Advances to the next position.
+    assert(Valid());
+    node_ = node_-&gt;Next(0); // 从level 0后移指向下一个
+}
+
+template&lt;typename Key, class Comparator&gt;
+inline void SkipList&lt;Key,Comparator&gt;::Iterator::Prev() {                    // Advances to the previous position.
+    // Instead of using explicit &quot;prev&quot; links, we just search for the
+    // last node that falls before key.
+    assert(Valid());
+    node_ = list_-&gt;FindLessThan(node_-&gt;key);                        // 找到前一个节点，如果为head_，则设置为NULL
+    if (node_ == list_-&gt;head_) {    
+        node_ = NULL;
+    }
+}
+template&lt;typename Key, class Comparator&gt;
+inline void SkipList&lt;Key,Comparator&gt;::Iterator::Seek(const Key&amp; target) {           // Advance to the first entry with a key &gt;= target
+    node_ = list_-&gt;FindGreaterOrEqual(target, NULL);
+}
+
+// 第一个节点
+template&lt;typename Key, class Comparator&gt;
+inline void SkipList&lt;Key,Comparator&gt;::Iterator::SeekToFirst() {             // Position at the first entry in list.
+    node_ = list_-&gt;head_-&gt;Next(0);
+}
+
+template&lt;typename Key, class Comparator&gt;
+inline void SkipList&lt;Key,Comparator&gt;::Iterator::SeekToLast() {              // Position at the last entry in list.
+    node_ = list_-&gt;FindLast();  // 查找最后一个节点，如果链表为空时，设置为null
+    if (node_ == list_-&gt;head_) {
+        node_ = NULL;
+    }
+}
+</code></pre><h3 id="mysql底层相关索引存储引擎"><a href="#mysql底层相关索引存储引擎" class="headerlink" title="mysql底层相关索引存储引擎"></a>mysql底层相关索引存储引擎</h3><p>[索引能加快访问数据的速度，是因为存储引擎不在进行全表扫描来获取所需要的数据，而是从索引的根节点开始搜索]<br>    存储引擎以不同方式使用B-Tree引擎；各有优劣</p>
+<pre><code>    1. MyISAM使用前缀压缩技术使得索引更小
+
+带来两个问题：为什么是B-Tree呢？（而不是hash，红黑树等）
+    1、B-tree是顺序组织数据的，范围查找的需求（相对于hash的优势）
+    2、IO少（相对于红黑树的优势）    
+
+1.NDB集群存储引擎使用T-Tree结构存储引擎
+2.InnoDB使用B+Tree
+</code></pre><p>B-tree索引适用于全键值，键值范围，键前缀查找（最左前缀查找）：</p>
+<pre><code>- 全职匹配
+- 匹配最左前缀
+- 匹配列前缀
+- 匹配范围值
+- 精确匹配某一列并范围匹配另外一列
+- 只访问索引的查询
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/ceph/" rel="tag"># ceph</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/12/ali_sentinal/" rel="next" title="存储相关">
+                <i class="fa fa-chevron-left"></i> 存储相关
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/06/12/redis_obj/" rel="prev" title="redis">
+                redis <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">天色渐晚</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#存储引擎"><span class="nav-number">1.</span> <span class="nav-text">存储引擎</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#mysql底层相关索引存储引擎"><span class="nav-number">2.</span> <span class="nav-text">mysql底层相关索引存储引擎</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">天色渐晚</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

@@ -1,0 +1,800 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="redis," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="redis对象  redis使用五大数据类型（string、hash、list、set、zset）来表示键和值，key类型一般是字符串， 而value类型则是redis对（redisObject）。  redis中每个对象都是  由redisObject结构来表示：1234567typedef struct redisObject&amp;#123;    unsigned type:4;">
+<meta name="keywords" content="redis">
+<meta property="og:type" content="article">
+<meta property="og:title" content="redis">
+<meta property="og:url" content="http://yoursite.com/2019/06/12/redis_obj/index.html">
+<meta property="og:site_name" content="阳台">
+<meta property="og:description" content="redis对象  redis使用五大数据类型（string、hash、list、set、zset）来表示键和值，key类型一般是字符串， 而value类型则是redis对（redisObject）。  redis中每个对象都是  由redisObject结构来表示：1234567typedef struct redisObject&amp;#123;    unsigned type:4;">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2019-07-31T08:36:57.903Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="redis">
+<meta name="twitter:description" content="redis对象  redis使用五大数据类型（string、hash、list、set、zset）来表示键和值，key类型一般是字符串， 而value类型则是redis对（redisObject）。  redis中每个对象都是  由redisObject结构来表示：1234567typedef struct redisObject&amp;#123;    unsigned type:4;">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2019/06/12/redis_obj/"/>
+
+
+
+
+
+  <title>redis | 阳台</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阳台</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">既然选择远行,便只顾风雨兼程</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2019/06/12/redis_obj/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">redis</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2019-06-12T00:00:00+08:00">
+                2019-06-12
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/redis/" itemprop="url" rel="index">
+                    <span itemprop="name">redis</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="redis对象"><a href="#redis对象" class="headerlink" title="redis对象"></a>redis对象</h3><p>  redis使用五大数据类型（string、hash、list、set、zset）来表示键和值，key类型一般是字符串， 而value类型则是redis对（redisObject）。  redis中每个对象都是<br>  由redisObject结构来表示：<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">redisObject</span>&#123;</span></span><br><span class="line">    <span class="keyword">unsigned</span> type:<span class="number">4</span>;        <span class="comment">//对象类型(五大数据类型之一)</span></span><br><span class="line">    <span class="keyword">unsigned</span> encoding:<span class="number">4</span>;</span><br><span class="line">    <span class="keyword">void</span> *ptr;              <span class="comment">//指向底层数据结构的指针</span></span><br><span class="line">    <span class="keyword">int</span> refcount;</span><br><span class="line">    <span class="keyword">unsigned</span> lru:<span class="number">22</span>;        <span class="comment">//最后一次被程序访问的时间</span></span><br><span class="line">&#125;robj;</span><br></pre></td></tr></table></figure></p>
+<p>redisObject中将数据属性和数据分开； 数据属性包括数据类型， 存储编码方式、淘汰时钟、引用<br>计数；<br>    1.数据类型：（枚举值[通过 type 命令来获取]）<br><figure class="highlight cpp"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">/* Object types */</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REDIS_STRING 0</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REDIS_LIST   1</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REDIS_SET    2</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REDIS_ZSET   3</span></span><br><span class="line"><span class="meta">#<span class="meta-keyword">define</span> REDIS_HASH   4</span></span><br></pre></td></tr></table></figure></p>
+<pre><code>2.存储编码方式，一个数据，可以多种方式存储 
+REDIS_SET的数据编码方式: REDIS_ENCODING_HT / REDIS_ENCODING_INTSET
+</code></pre> <figure class="highlight c"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br><span class="line">23</span><br><span class="line">24</span><br><span class="line">25</span><br><span class="line">26</span><br><span class="line">27</span><br><span class="line">28</span><br><span class="line">29</span><br><span class="line">30</span><br><span class="line">31</span><br><span class="line">32</span><br><span class="line">33</span><br><span class="line">34</span><br><span class="line">35</span><br><span class="line">36</span><br><span class="line">37</span><br><span class="line">38</span><br><span class="line">39</span><br><span class="line">40</span><br><span class="line">41</span><br><span class="line">42</span><br></pre></td><td class="code"><pre><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_RAW      0   <span class="comment">// raw representation</span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_INT      1   <span class="comment">// encoded as integer</span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_HT       2   <span class="comment">// encoded as hash table </span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_ZIPMAP   3   <span class="comment">// encoded as zipmap </span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_LINKEDLIST 4 <span class="comment">// encoded as regular linked list </span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_ZIPLIST  5   <span class="comment">// encoded as ziplist </span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_INTSET   6   <span class="comment">// encoded as intset </span></span></span><br><span class="line">        <span class="meta">#<span class="meta-keyword">define</span> REDIS_ENCODING_SKIPLIST 7   <span class="comment">// encoded as skiplist </span></span></span><br><span class="line"> ```    </span><br><span class="line">    <span class="number">3.</span> 数据类型(<span class="number">5</span>种)可对应的编码实现</span><br><span class="line">```c</span><br><span class="line">        <span class="comment">//redis字符串实现</span></span><br><span class="line">        REDIS_STRING    REDIS_ENCODING_INT </span><br><span class="line">        REDIS_STRING    REDIS_ENCODING_EMBSTR</span><br><span class="line">        REDIS_STRING    REDIS_ENCODING_RAW</span><br><span class="line">        <span class="comment">//redis list实现</span></span><br><span class="line">        REDIS_LIST      REDIS_ENCODING_ZIPLIST </span><br><span class="line">        REDIS_LIST      REDIS_ENCODING_LINKEDLIST </span><br><span class="line">        <span class="comment">//redis hash实现</span></span><br><span class="line">        REDIS_HASH      REDIS_ENCODING_ZIPLIST</span><br><span class="line">        REDIS_HASH      REDIS_ENCODING_HT </span><br><span class="line">        <span class="comment">//redis set实现</span></span><br><span class="line">        REDIS_SET       REDIS_ENCODING_INTSET</span><br><span class="line">        REDIS_SET       REDIS_ENCODING_HT </span><br><span class="line">        <span class="comment">//redis zset实现</span></span><br><span class="line">        REDIS_ZSET      REDIS_ENCODING_ZIPLIST </span><br><span class="line">        REDIS_ZSET      REDIS_ENCODING_SKIPLIST </span><br><span class="line">```    </span><br><span class="line"></span><br><span class="line">##<span class="meta"># redis字符串对象</span></span><br><span class="line">```shell</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; <span class="built_in">set</span> k1 <span class="number">1</span></span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; object encoding k1  <span class="comment">//使用long表示整形</span></span><br><span class="line"><span class="string">"int"</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; <span class="built_in">set</span> k3 abcdefghijkabcdefjklhlaskdjflsdjfienzfjdlkasfjlkejlkajelafnd</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; object encoding k3</span><br><span class="line"><span class="string">"raw"</span></span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; <span class="built_in">set</span> k2 giant</span><br><span class="line">OK</span><br><span class="line"><span class="number">127.0</span><span class="number">.0</span><span class="number">.1</span>:<span class="number">6979</span>&gt; object encoding k2</span><br><span class="line"><span class="string">"embstr"</span></span><br></pre></td></tr></table></figure>
+<pre><code>- embstr:【嵌入string】，数据嵌入在redisObject对象中；
+- raw: redisObject对象中的指针指向raw地址（sds对象）；
+- 对于浮点数类型也是作为字符串保存的，在需要的时候再将其转换成浮点数类型。
+</code></pre><h3 id="redis列表对象"><a href="#redis列表对象" class="headerlink" title="redis列表对象"></a>redis列表对象</h3><pre><code>1. 列表对象的编码是ziplist或linkedlist。 结构如下：
+![](/images/post/redis_list_object.png)
+
+2. 如何确定编码方式
+    - 列表保存元素个数小于512个
+    - 每个元素长度小于64字节
+不能满足两个条件时，使用linkedlist；否则ziplist    
+</code></pre><h3 id="redis-哈希对象"><a href="#redis-哈希对象" class="headerlink" title="redis 哈希对象"></a>redis 哈希对象</h3><pre><code>哈希对象的键是一个字符串类型，值是一个键值对集合；
+1.编码方式：ziplist / hashtable。 结构如下：
+![](/images/post/redis_hash_encoding.png)
+
+2.确定编码方式
+    - 列表保存元素个数小于512个
+    - 每个元素长度小于64字节
+不满足两个条件时，使用hashtable，否则ziplist   
+</code></pre><h3 id="redis-set对象"><a href="#redis-set对象" class="headerlink" title="redis set对象"></a>redis set对象</h3><pre><code>集合中的元素是无序的，因此不能通过索引来操作元素；集合中的元素不能有重复
+1.编码方式：intset 或者hashtable
+    - intset 编码的集合对象使用整数集合作为底层实现，集合对象包含的所有元素都被保存在整数集合中。
+    - hashtable 编码的集合对象使用 字典作为底层实现，字典的每个键都是一个字符串对象，这里的每个字符串对象就是一个集合中的元素，而字典的值则全部设置为 null
+结构如下：
+![](/images/post/redis_set_encoding.png)    
+2.确定编码方式
+    - 列表保存元素个数小于512个
+    - 集合对象中所有元素都是整数
+不满足两个条件时，使用hashtable；否则intset
+</code></pre><h3 id="redis-zsort对象"><a href="#redis-zsort对象" class="headerlink" title="redis zsort对象"></a>redis zsort对象</h3><pre><code>1.编码方式：ziplist 或者 skiplist 
+ziplist编码方式结构如下:
+![](/images/post/redis_zsort_encoding.png)
+</code></pre><pre><code class="cpp"><span class="comment">//shkiplist编码的zsort对象使用zet结构作为底层实现</span>
+<span class="keyword">typedef</span> <span class="class"><span class="keyword">struct</span> <span class="title">zset</span>{</span>
+    zskiplist *zsl; <span class="comment">//跳表</span>
+    dict *dice;     <span class="comment">//字典</span>
+}zset;
+    <span class="comment">//字典的键保存元素的值，字典的值保存元素的分值</span>
+    <span class="comment">//跳表节点的object属性保存元素的成员</span>
+    <span class="comment">//跳表节点的score属性保存元素的分值</span>
+    <span class="comment">/*</span>
+<span class="comment">    这两种数据结构会通过指针来共享相同元素的成员和分值，所以不会产生重复成员和分值，造成内存的浪费。</span>
+<span class="comment">    */</span>
+</code></pre>
+<pre><code>2.确定编码方式
+    - 保存的元素数量小于128
+    - 保存的所有元素长度都小于64字节
+不满足两个条件时，使用skiplist，fou    
+</code></pre><h3 id="五大数据类型应用场景"><a href="#五大数据类型应用场景" class="headerlink" title="五大数据类型应用场景"></a>五大数据类型应用场景</h3><pre><code>- string：因为string 类型是二进制安全的，可以用来存放图片，视频等内容；tring类型的value也可以是数字，可以用作计数器（INCR,DECR），比如分布式环境中统计系统的在线人数，秒杀等。
+- hash： value 存放的是键值对，比如可以做单点登录存放用户信息。
+- list：  数据类型，可实现简单的消息队列，另外可以利用lrange命令，做基于redis的分
+页功能
+- set： 由于底层是字典实现的，查找元素特别快，另外set 数据类型不允许重复，利用这两个特性我们可以进行全局去重，比如在用户注册模块，判断用户名是否注册；另外就是利用交集、并集、差集等操作，可以计算共同喜好，全部的喜好，自己独有的喜好等功能。
+- zset： 有序的集合，可以做范围查找，排行榜应用，取 TOP N 操作等
+</code></pre>
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/redis/" rel="tag"># redis</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2019/06/12/storage_enginer/" rel="next" title="存储引擎">
+                <i class="fa fa-chevron-left"></i> 存储引擎
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2019/08/05/rocksdb/" rel="prev" title="">
+                 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">天色渐晚</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">41</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">12</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">19</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#redis对象"><span class="nav-number">1.</span> <span class="nav-text">redis对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis列表对象"><span class="nav-number">2.</span> <span class="nav-text">redis列表对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-哈希对象"><span class="nav-number">3.</span> <span class="nav-text">redis 哈希对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-set对象"><span class="nav-number">4.</span> <span class="nav-text">redis set对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#redis-zsort对象"><span class="nav-number">5.</span> <span class="nav-text">redis zsort对象</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#五大数据类型应用场景"><span class="nav-number">6.</span> <span class="nav-text">五大数据类型应用场景</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2019</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">天色渐晚</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>

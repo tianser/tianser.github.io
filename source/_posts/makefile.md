@@ -1,6 +1,6 @@
 ---
   title:golang中使用makefile
-  date: 2018-04-15
+  date:2018-04-15
   categories:
     - golang
   tags:

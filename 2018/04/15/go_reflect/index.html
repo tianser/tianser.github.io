@@ -1,0 +1,814 @@
+<!DOCTYPE html>
+
+
+
+  
+
+
+<html class="theme-next gemini use-motion" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8"/>
+<meta http-equiv="X-UA-Compatible" content="IE=edge" />
+<meta name="viewport" content="width=device-width, initial-scale=1, maximum-scale=1"/>
+<meta name="theme-color" content="#222">
+
+
+
+
+
+
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform" />
+<meta http-equiv="Cache-Control" content="no-siteapp" />
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css" />
+
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css" />
+
+<link href="/css/main.css?v=5.1.4" rel="stylesheet" type="text/css" />
+
+
+  <link rel="apple-touch-icon" sizes="180x180" href="/images/apple-touch-icon-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="32x32" href="/images/favicon-32x32-next.png?v=5.1.4">
+
+
+  <link rel="icon" type="image/png" sizes="16x16" href="/images/favicon-16x16-next.png?v=5.1.4">
+
+
+  <link rel="mask-icon" href="/images/logo.svg?v=5.1.4" color="#222">
+
+
+
+
+
+  <meta name="keywords" content="golang," />
+
+
+
+
+
+
+
+
+
+
+<meta name="description" content="类型和接口(Types and interfaces)因为反射是建立在类型系统(type system)上的。所以我们从Go的类型入手  Go是静态类型化的。每个变量都有一个静态类型1234type MyInt intvar i intvar j MyInt   i的类型就是int，而j的类型就是MyInt；这里的变量i和j具有不同的静态变量，虽然他们拥有相同的底层类型(underlying ty">
+<meta name="keywords" content="golang">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Golang反射包的实现原理（The Laws of Reflection)">
+<meta property="og:url" content="http://yoursite.com/2018/04/15/go_reflect/index.html">
+<meta property="og:site_name" content="阳台">
+<meta property="og:description" content="类型和接口(Types and interfaces)因为反射是建立在类型系统(type system)上的。所以我们从Go的类型入手  Go是静态类型化的。每个变量都有一个静态类型1234type MyInt intvar i intvar j MyInt   i的类型就是int，而j的类型就是MyInt；这里的变量i和j具有不同的静态变量，虽然他们拥有相同的底层类型(underlying ty">
+<meta property="og:locale" content="zh-Hans">
+<meta property="og:updated_time" content="2020-07-11T02:34:19.128Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Golang反射包的实现原理（The Laws of Reflection)">
+<meta name="twitter:description" content="类型和接口(Types and interfaces)因为反射是建立在类型系统(type system)上的。所以我们从Go的类型入手  Go是静态类型化的。每个变量都有一个静态类型1234type MyInt intvar i intvar j MyInt   i的类型就是int，而j的类型就是MyInt；这里的变量i和j具有不同的静态变量，虽然他们拥有相同的底层类型(underlying ty">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Gemini',
+    version: '5.1.4',
+    sidebar: {"position":"left","display":"post","offset":12,"b2t":false,"scrollpercent":false,"onmobile":false},
+    fancybox: true,
+    tabs: true,
+    motion: {"enable":true,"async":false,"transition":{"post_block":"fadeIn","post_header":"slideDownIn","post_body":"slideDownIn","coll_header":"slideLeftIn","sidebar":"slideUpIn"}},
+    duoshuo: {
+      userId: '0',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://yoursite.com/2018/04/15/go_reflect/"/>
+
+
+
+
+
+  <title>Golang反射包的实现原理（The Laws of Reflection) | 阳台</title>
+  
+
+
+
+
+
+
+
+
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+  
+    
+  
+
+  <div class="container sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-brand-wrapper">
+  <div class="site-meta ">
+    
+
+    <div class="custom-logo-site-title">
+      <a href="/"  class="brand" rel="start">
+        <span class="logo-line-before"><i></i></span>
+        <span class="site-title">阳台</span>
+        <span class="logo-line-after"><i></i></span>
+      </a>
+    </div>
+      
+        <p class="site-subtitle">既然选择远行,便只顾风雨兼程</p>
+      
+  </div>
+
+  <div class="site-nav-toggle">
+    <button>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+      <span class="btn-bar"></span>
+    </button>
+  </div>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br />
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br />
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br />
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br />
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br />
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+    </ul>
+  
+
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  
+  
+  
+  <div class="post-block">
+    <link itemprop="mainEntityOfPage" href="http://yoursite.com/2018/04/15/go_reflect/">
+
+    <span hidden itemprop="author" itemscope itemtype="http://schema.org/Person">
+      <meta itemprop="name" content="天色渐晚">
+      <meta itemprop="description" content="">
+      <meta itemprop="image" content="/images/avatar.gif">
+    </span>
+
+    <span hidden itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+      <meta itemprop="name" content="阳台">
+    </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">Golang反射包的实现原理（The Laws of Reflection)</h1>
+        
+
+        <div class="post-meta">
+          <span class="post-time">
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-calendar-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">发表于</span>
+              
+              <time title="创建于" itemprop="dateCreated datePublished" datetime="2018-04-15T00:00:00+08:00">
+                2018-04-15
+              </time>
+            
+
+            
+
+            
+          </span>
+
+          
+            <span class="post-category" >
+            
+              <span class="post-meta-divider">|</span>
+            
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              
+                <span class="post-meta-item-text">分类于</span>
+              
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/golang/" itemprop="url" rel="index">
+                    <span itemprop="name">golang</span>
+                  </a>
+                </span>
+
+                
+                
+              
+            </span>
+          
+
+          
+            
+          
+
+          
+          
+
+          
+
+          
+
+          
+
+        </div>
+      </header>
+    
+
+    
+    
+    
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <h3 id="类型和接口-Types-and-interfaces"><a href="#类型和接口-Types-and-interfaces" class="headerlink" title="类型和接口(Types and interfaces)"></a>类型和接口(Types and interfaces)</h3><p>因为反射是建立在类型系统(type system)上的。所以我们从Go的类型入手</p>
+<ul>
+<li>Go是静态类型化的。每个变量都有一个静态类型<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> MyInt <span class="keyword">int</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">var</span> i <span class="keyword">int</span></span><br><span class="line"><span class="keyword">var</span> j MyInt</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>i的类型就是int，而j的类型就是MyInt；这里的变量i和j具有不同的静态变量，虽然他们拥有相同的底层类型(underlying type),如果不显示的进行强制类型转换他们是不能相互赋值的；</p>
+<p>类型(type)中非常重要的一类(category)就是接口类型(interface type); 一个接口就表示一组确定的方法（method）集合。一个接口变量能存储任意的具体值（这里的具体concrete就是指非接口的non-interface)，只要这个具体值所属的类型实现了这个接口的所有方法。</p>
+<p>一个大家都很熟悉的例子是io.Reader和io.Writer，类型Reader和类型Writer来自io包:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> Reader <span class="keyword">interface</span>&#123;</span><br><span class="line">  Read(p []<span class="keyword">byte</span>) (n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span> Writer <span class="keyword">interface</span>&#123;</span><br><span class="line">  Write(p []<span class="keyword">byte</span>)(n <span class="keyword">int</span>, err error)</span><br><span class="line">&#125;</span><br></pre></td></tr></table></figure></p>
+<p>实现了上面的Read方法（或Write方法）的任意类型都可以说实现了io.Reader接口（或io.Writer接口)。 这就意味着io.Reader接口变量能够保存任意Read方法的类型所定义的值；</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r io.Reader</span><br><span class="line">r = os.Stdin</span><br><span class="line">r = bufio.NewReader(r)</span><br><span class="line">r = <span class="built_in">new</span>(bytes.Buffer)</span><br></pre></td></tr></table></figure>
+<p>明确r到底保存了什么样的具体值非常重要，但是这里r的类型却总是io.Reader：注意Go是静态类型化的，而r的静态类型是io.Reader。</p>
+<p>一个非常非常重要的接口类型例子就是空接口:<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">interface</span>&#123;&#125;</span><br></pre></td></tr></table></figure></p>
+<p>空接口表示方法集合为空并且可以保存任意值，因为任意值都有0个或者更多方法。</p>
+<ul>
+<li>有些人说Go的接口是动态类型化的，但这是一种误导。</li>
+<li>Go的接口都是静态类型化的：一个接口类型变量总是保持同一个静态类型，即使在运行时它【接口类型变量】保存的值类型发生变化，这些值总是满足这个接口。</li>
+</ul>
+<h3 id="接口的表示-The-representation-of-an-interface"><a href="#接口的表示-The-representation-of-an-interface" class="headerlink" title="接口的表示(The representation of an interface)"></a>接口的表示(The representation of an interface)</h3><ul>
+<li>一个接口类型变量存储了一个pair：<ul>
+<li>赋值给这个接口变量的具体值</li>
+<li>该值的类型描述符</li>
+</ul>
+</li>
+<li><p>更进一步的说：</p>
+<ul>
+<li>这个” 值 “是实现了这个接口的底层具体数据项(underlying concrete data item)</li>
+<li>这个” 类型 “是描述了那个接口底层具体数据项(item)的全类型(full type)<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> r io.Reader</span><br><span class="line">tty, err := os.OpenFile(<span class="string">"/dev/tty"</span>, os.O_RDWR, <span class="number">0</span>)</span><br><span class="line"><span class="keyword">if</span> err != <span class="literal">nil</span>&#123;</span><br><span class="line">  <span class="keyword">return</span> <span class="literal">nil</span>, err</span><br><span class="line">&#125;</span><br><span class="line">r = tty</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>分析</p>
+<ul>
+<li>接口变量r 包含了（value, type) 对，即（tty, os.File) //(底层具体数据项, 描述底层具体数据项的全类型)</li>
+<li>除了Read方法以外，类型os.File也实现了其它方法；即使这个接口值仅仅提供了对Read方法的访问，这个接口值内部仍然带有关于这个值的全部类型信息。这就是为什么我们能干下面这些事儿：<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> w io.Writer</span><br><span class="line">w = r.(io.Writer)</span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+</ul>
+<p>赋值操作中的表达式是一个类型断言（type assertion）；它所断言的是r中存储的项（item）也实现了io.Writer接口，所以我们可以把它赋值给w。<br><br>赋值操作完毕以后，w将会包含 (tty, *os.File)对;w中的pair跟r中的pair是同样的。<br>接口的静态类型决定了能用接口变量调用哪些方法，即使接口里存的具体值内部可能还有一堆其它方法；</p>
+<p>接口定义的方法集合是该种接口变量所保存的具体值所含有的方法集合的一个子集，通过这个接口变量只能调用这个接口定义过的方法，没法通过这个接口变量调用其它任何方法；<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> empty <span class="keyword">interface</span>&#123;&#125;</span><br><span class="line">empty = w</span><br></pre></td></tr></table></figure></p>
+<p>empty，也能包含同样的pair即(tty, *os.File)。这样的话就很方便了，一个空接口可以保存任意值和我们所需要的关于所保存值的全部信息。</p>
+<ul>
+<li>一个接口中的pair总有（值，具体类型）这样的格式，而不能有（值，接口类型）这样的格式。</li>
+<li>接口不能保存接口值（也就是说，你没法把一个接口变量值存储到一个接口变量中，只能把一个具体类型的值存储到一个接口变量中。）</li>
+</ul>
+<h3 id="反射"><a href="#反射" class="headerlink" title="反射"></a>反射</h3><h4 id="第一反射定律-the-first-law-of-reflection"><a href="#第一反射定律-the-first-law-of-reflection" class="headerlink" title="第一反射定律(the first law of reflection)"></a>第一反射定律(the first law of reflection)</h4><ul>
+<li>从接口值到反射对象的反射<br>反射是一种检查存储在接口变量中的（类型，值）对的机制。<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="keyword">float64</span> = <span class="number">3.4</span></span><br><span class="line">fmt.Println(<span class="string">"type:"</span>, reflect.TypeOf(x))   <span class="comment">//type: float64</span></span><br><span class="line">fmt.Println(<span class="string">"value:"</span>, reflect.ValueOf(x)) <span class="comment">//Valueof方法会返回一个Value类型的对象</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//TypeOf函数原型</span></span><br><span class="line"><span class="function"><span class="keyword">func</span> <span class="title">TypeOf</span><span class="params">(i <span class="keyword">interface</span>&#123;&#125;)</span> <span class="title">Type</span></span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+<p>当我们调用reflect.Typeof(x)的时候，x首先被保存到一个空接口中，这个空接口然后被作为参数传递。reflect.Typeof 会把这个空接口拆包（unpack）恢复出类型信息。</p>
+<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="keyword">float64</span> = <span class="number">3.4</span></span><br><span class="line">v := reflect.ValueOf(x)</span><br><span class="line">fmt.Println(<span class="string">"type:"</span>, v.Type())  <span class="comment">//返回值的静态类型；就是说如果定义了type MyInt int64，那么这个函数返回的是MyInt类型而不是int64，</span></span><br><span class="line">fmt.Println(<span class="string">"kind is float64:"</span>, v.kind() == reflect.Float64) <span class="comment">//返回值的底层类型，是说如果定义了type MyInt int64，那么这个函数返回的是int64类型而不是MyInt类型，</span></span><br><span class="line">fmt.Println(<span class="string">"value:"</span>, v.Float())</span><br><span class="line"></span><br><span class="line"><span class="keyword">type</span>: <span class="keyword">float64</span></span><br><span class="line">kind is <span class="keyword">float64</span>: <span class="literal">true</span></span><br><span class="line">value: <span class="number">3.4</span></span><br></pre></td></tr></table></figure>
+<p>反射库有两特殊性质：</p>
+<ul>
+<li><p>为了保持API简单，Value的”setter”和“getter”类型的方法操作的是可以包含某个值的最大类型；</p>
+<ul>
+<li>比如，所有的有符号整型，只有针对int64类型的方法，因为它是所有的有符号整型中最大的一个类型。也就是说，Value的Int方法返回的是一个int64，同时SetInt的参数类型采用的是一个int64；<figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="keyword">uint8</span> = <span class="string">'x'</span></span><br><span class="line">v := reflect.ValueOf(x)</span><br><span class="line">fmt.Println(<span class="string">"type:"</span>, v.Type()) <span class="comment">// uint8.</span></span><br><span class="line">fmt.Println(<span class="string">"kind is uint8: "</span>, v.Kind() == reflect.Uint8) <span class="comment">// true.</span></span><br><span class="line">x = <span class="keyword">uint8</span>(v.Uint())<span class="comment">// v.Uint returns a uint64.看到啦嘛？这个地方必须进行强制类型转换！</span></span><br></pre></td></tr></table></figure>
+</li>
+</ul>
+</li>
+<li><p>反射对象（reflection object）的Kind描述的是底层类型（underlying type），而不是静态类型（static type）</p>
+</li>
+</ul>
+<h3 id="第二反射定律（The-second-law-of-reflection）"><a href="#第二反射定律（The-second-law-of-reflection）" class="headerlink" title="第二反射定律（The second law of reflection）"></a>第二反射定律（The second law of reflection）</h3><h4 id="从反射队形到接口值的反射"><a href="#从反射队形到接口值的反射" class="headerlink" title="从反射队形到接口值的反射"></a>从反射队形到接口值的反射</h4><p>给定一个reflect.Value，我们能用Interface方法把它恢复成一个接口值；效果上就是这个Interface方法把类型和值的信息打包成一个接口表示并且返回结果：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br></pre></td><td class="code"><pre><span class="line"><span class="comment">// func (v Value) Interface() interface&#123;&#125;</span></span><br><span class="line"></span><br><span class="line">y := v.Interface().(<span class="keyword">float64</span>)</span><br><span class="line">fmt.Println(y)</span><br></pre></td></tr></table></figure></p>
+<p>我们甚至可以做得更好一些，fmt.Println等方法的参数是一个空接口类型的值，所以我们可以让fmt包自己在内部完成我们在上面代码中做的工作。因此，为了正确打印一个reflect.Value，我们只需把Interface方法的返回值直接传递给这个格式化输出例程：<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br></pre></td><td class="code"><pre><span class="line">fmt.Preintln(v.Interface())</span><br><span class="line">fmt.Printf(<span class="string">"value is %7.1e\n"</span>, v.Interface())</span><br></pre></td></tr></table></figure></p>
+<p>我们不需要对v.Interface方法的结果调用类型断言（type-assert)为float64；空接口类型值内部包含有具体值的类型信息，并且Printf方法会把它恢复出来。</p>
+<p>Interface方法是Valueof函数的逆，除了它的返回值的类型总是interface{}静态类型。</p>
+<h3 id="第三反射定律"><a href="#第三反射定律" class="headerlink" title="第三反射定律"></a>第三反射定律</h3><h4 id="为了修改一个反射对象，值必须是settable的"><a href="#为了修改一个反射对象，值必须是settable的" class="headerlink" title="为了修改一个反射对象，值必须是settable的"></a>为了修改一个反射对象，值必须是settable的</h4><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="keyword">float64</span> = <span class="number">3.4</span></span><br><span class="line">v := reflect.ValueOf(x)</span><br><span class="line">v.SetFloat(<span class="number">7.1</span>) <span class="comment">// Error: will panic</span></span><br><span class="line"></span><br><span class="line"><span class="comment">//panic: reflect.Value.SetFloat using unaddressable value</span></span><br></pre></td></tr></table></figure>
+<p>问题不是出在值7.1不是可以寻址的，而是出在v不是settable的。Settability是Value的一条性质，而且，不是所有的Value都具备这条性质;<br>Value的CanSet方法用与测试一个Value的settablity；<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span>  x <span class="keyword">float64</span> = <span class="number">3.4</span></span><br><span class="line">v := reflect.ValueOf(x)</span><br><span class="line">fmt.Println(<span class="string">"settability of v:"</span>, v.CanSet())</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line">settability of v: <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<p>传递了x的一个副本给reflect.Valueof函数，所以作为reflect.Valueof参数被创造出来的接口值只是x的一个副本，而不是x本身。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">var</span> x <span class="keyword">float64</span> = <span class="number">3.4</span></span><br><span class="line">p := reflect.ValueOf(&amp;x)</span><br><span class="line">fmt.Println(<span class="string">"type of p:"</span>, p.Type())</span><br><span class="line">fmt.Println(<span class="string">"settability of p:"</span>, p.CanSet())</span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="keyword">type</span> of p: *<span class="keyword">float64</span></span><br><span class="line">settability of p: <span class="literal">false</span></span><br></pre></td></tr></table></figure></p>
+<p>反射对象p不是settable的，但是我们想要设置的不是p，而是（效果上来说）*p。为了得到p指向的东西，我们调用Value的Elem方法;这样就能迂回绕过指针，同时把结果保存在叫v的Value中.<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br></pre></td><td class="code"><pre><span class="line">v := p.Elem()</span><br><span class="line">fmt.Println(<span class="string">"settability of v:"</span>, v.CanSet())</span><br><span class="line">v.SetFloat(<span class="number">7.1</span>)</span><br><span class="line">fmt.Println(v.Interface())</span><br><span class="line">fmt.Println(x)</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line">settability of v: <span class="literal">true</span></span><br><span class="line"><span class="number">7.1</span></span><br><span class="line"><span class="number">7.1</span></span><br></pre></td></tr></table></figure></p>
+<p>反射理解起来有点困难，但是它确实正在做编程语言要做的，尽管是通过掩盖了所发生的一切的反射Types和Vlues来实现的。这样好了，你就直接记住反射Values为了修改它们所表示的东西必须要有这些东西的地址。</p>
+<h3 id="structs"><a href="#structs" class="headerlink" title="structs"></a>structs</h3><p>v本身不是一个指针，它只是从一个指针派生来的。出现这种情况的一个常见的方法是当使用反射来修改一个structure的各个域的时候。只要我们有这个structure的地址，我们就能修改它的各个域。<br><figure class="highlight go"><table><tr><td class="gutter"><pre><span class="line">1</span><br><span class="line">2</span><br><span class="line">3</span><br><span class="line">4</span><br><span class="line">5</span><br><span class="line">6</span><br><span class="line">7</span><br><span class="line">8</span><br><span class="line">9</span><br><span class="line">10</span><br><span class="line">11</span><br><span class="line">12</span><br><span class="line">13</span><br><span class="line">14</span><br><span class="line">15</span><br><span class="line">16</span><br><span class="line">17</span><br><span class="line">18</span><br><span class="line">19</span><br><span class="line">20</span><br><span class="line">21</span><br><span class="line">22</span><br></pre></td><td class="code"><pre><span class="line"><span class="keyword">type</span> T <span class="keyword">struct</span>&#123;</span><br><span class="line">  A <span class="keyword">int</span></span><br><span class="line">  B <span class="keyword">string</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">t := T&#123;<span class="number">23</span>, <span class="string">"skidoo"</span>&#125;</span><br><span class="line">s := reflect.ValueOf(&amp;t).Elem()</span><br><span class="line">typeOfT := s.Type()   <span class="comment">//把s.Type()返回的Type对象复制给typeofT，typeofT也是一个反射</span></span><br><span class="line"></span><br><span class="line"><span class="keyword">for</span> i:=<span class="number">0</span>; i&lt;s.NumField(); i++&#123;</span><br><span class="line">  f := s.Field(i)   <span class="comment">//迭代s的各个域，注意每个域仍然是反射。</span></span><br><span class="line">  fmt.Printf(<span class="string">"%d: %s %s = %v\n"</span>, i, typeOfT.Field(i).Name, f.Type(), f.Interface())<span class="comment">//提取了每个域的名字</span></span><br><span class="line">&#125;</span><br><span class="line"></span><br><span class="line">s.Field(<span class="number">0</span>).SetInt(<span class="number">77</span>)</span><br><span class="line">s.Field(<span class="number">1</span>).SetString(<span class="string">"Sunset Strip"</span>)</span><br><span class="line">fmt.Println(<span class="string">"t is now"</span>, t)</span><br><span class="line"></span><br><span class="line"><span class="comment">//</span></span><br><span class="line"><span class="number">0</span>: A <span class="keyword">int</span> = <span class="number">23</span></span><br><span class="line"><span class="number">1</span>: B <span class="keyword">string</span> = skidoo</span><br><span class="line">t is now &#123;<span class="number">77</span> Sunset Strip&#125;</span><br></pre></td></tr></table></figure></p>
+
+      
+    </div>
+    
+    
+    
+
+    
+
+    
+
+    
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/golang/" rel="tag"># golang</a>
+          
+        </div>
+      
+
+      
+      
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2018/04/09/c++11_base/" rel="next" title="c++11基础整理">
+                <i class="fa fa-chevron-left"></i> c++11基础整理
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2018/04/15/paxos/" rel="prev" title="paxos">
+                paxos <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </div>
+  
+  
+  
+  </article>
+
+
+
+    <div class="post-spread">
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+
+  
+
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview-wrap">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview-wrap sidebar-panel">
+        <div class="site-overview">
+          <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+            
+              <p class="site-author-name" itemprop="name">天色渐晚</p>
+              <p class="site-description motion-element" itemprop="description"></p>
+          </div>
+
+          <nav class="site-state motion-element">
+
+            
+              <div class="site-state-item site-state-posts">
+              
+                <a href="/archives/">
+              
+                  <span class="site-state-item-count">17</span>
+                  <span class="site-state-item-name">日志</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-categories">
+                <a href="/categories/index.html">
+                  <span class="site-state-item-count">7</span>
+                  <span class="site-state-item-name">分类</span>
+                </a>
+              </div>
+            
+
+            
+              
+              
+              <div class="site-state-item site-state-tags">
+                <a href="/tags/index.html">
+                  <span class="site-state-item-count">15</span>
+                  <span class="site-state-item-name">标签</span>
+                </a>
+              </div>
+            
+
+          </nav>
+
+          
+
+          
+
+          
+          
+
+          
+          
+
+          
+
+        </div>
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-3"><a class="nav-link" href="#类型和接口-Types-and-interfaces"><span class="nav-number">1.</span> <span class="nav-text">类型和接口(Types and interfaces)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#接口的表示-The-representation-of-an-interface"><span class="nav-number">2.</span> <span class="nav-text">接口的表示(The representation of an interface)</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#反射"><span class="nav-number">3.</span> <span class="nav-text">反射</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#第一反射定律-the-first-law-of-reflection"><span class="nav-number">3.1.</span> <span class="nav-text">第一反射定律(the first law of reflection)</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第二反射定律（The-second-law-of-reflection）"><span class="nav-number">4.</span> <span class="nav-text">第二反射定律（The second law of reflection）</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#从反射队形到接口值的反射"><span class="nav-number">4.1.</span> <span class="nav-text">从反射队形到接口值的反射</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#第三反射定律"><span class="nav-number">5.</span> <span class="nav-text">第三反射定律</span></a><ol class="nav-child"><li class="nav-item nav-level-4"><a class="nav-link" href="#为了修改一个反射对象，值必须是settable的"><span class="nav-number">5.1.</span> <span class="nav-text">为了修改一个反射对象，值必须是settable的</span></a></li></ol></li><li class="nav-item nav-level-3"><a class="nav-link" href="#structs"><span class="nav-number">6.</span> <span class="nav-text">structs</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">&copy; <span itemprop="copyrightYear">2020</span>
+  <span class="with-love">
+    <i class="fa fa-user"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">天色渐晚</span>
+
+  
+</div>
+
+
+  <div class="powered-by">由 <a class="theme-link" target="_blank" href="https://hexo.io">Hexo</a> 强力驱动</div>
+
+
+
+  <span class="post-meta-divider">|</span>
+
+
+
+  <div class="theme-info">主题 &mdash; <a class="theme-link" target="_blank" href="https://github.com/iissnan/hexo-theme-next">NexT.Gemini</a> v5.1.4</div>
+
+
+
+
+        
+
+
+
+
+
+
+
+        
+      </div>
+    </footer>
+
+    
+      <div class="back-to-top">
+        <i class="fa fa-arrow-up"></i>
+        
+      </div>
+    
+
+    
+
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+  
+
+  
+  
+    <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+  
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.4"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.4"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.4"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.4"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.4"></script>
+
+
+
+  
+
+
+  
+
+
+
+
+	
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+
+
+
+
+
+
+
+
+
+
+
+  
+
+
+
+
+
+  
+
+  
+
+  
+
+  
+  
+
+  
+
+  
+
+  
+
+</body>
+</html>
